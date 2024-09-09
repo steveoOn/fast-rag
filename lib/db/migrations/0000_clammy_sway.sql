@@ -1,48 +1,3 @@
--- Current sql file was generated after introspecting the database
--- If you want to run this migration please uncomment this code before executing migrations
-/*
-DO $$ BEGIN
- CREATE TYPE "auth"."aal_level" AS ENUM('aal1', 'aal2', 'aal3');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "auth"."code_challenge_method" AS ENUM('s256', 'plain');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "auth"."factor_status" AS ENUM('unverified', 'verified');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "auth"."factor_type" AS ENUM('totp', 'webauthn', 'phone');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "auth"."one_time_token_type" AS ENUM('confirmation_token', 'reauthentication_token', 'recovery_token', 'email_change_token_new', 'email_change_token_current', 'phone_change_token');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "pgsodium"."key_status" AS ENUM('default', 'valid', 'invalid', 'expired');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "pgsodium"."key_type" AS ENUM('aead-ietf', 'aead-det', 'hmacsha512', 'hmacsha256', 'auth', 'shorthash', 'generichash', 'kdf', 'secretbox', 'secretstream', 'stream_xchacha20');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
 DO $$ BEGIN
  CREATE TYPE "public"."access_token_status" AS ENUM('active', 'inactive');
 EXCEPTION
@@ -62,8 +17,8 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "access_tokens" (
-	"id" text PRIMARY KEY NOT NULL,
-	"client_id" text NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"client_id" varchar(255) NOT NULL,
 	"token" varchar(255) NOT NULL,
 	"description" text,
 	"status" "access_token_status" DEFAULT 'active' NOT NULL,
@@ -73,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "access_tokens" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "clients" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"api_key" varchar(255) NOT NULL,
 	"status" "client_status" DEFAULT 'pending' NOT NULL,
@@ -83,16 +38,16 @@ CREATE TABLE IF NOT EXISTS "clients" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "document_versions" (
-	"id" text PRIMARY KEY NOT NULL,
-	"document_id" text NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"document_id" varchar(255) NOT NULL,
 	"version" integer NOT NULL,
 	"storage_url" varchar(1024),
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "documents" (
-	"id" text PRIMARY KEY NOT NULL,
-	"client_id" text NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"client_id" varchar(255) NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"type" "document_type" NOT NULL,
 	"storage_url" varchar(1024),
@@ -101,10 +56,10 @@ CREATE TABLE IF NOT EXISTS "documents" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "embeddings" (
-	"id" text PRIMARY KEY NOT NULL,
-	"document_version_id" text NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"document_version_id" varchar(255) NOT NULL,
 	"content" text NOT NULL,
-	"embedding" varchar(1536) NOT NULL,
+	"embedding" vector(1536) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -131,5 +86,5 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
-
-*/
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "embeddingIndex" ON "embeddings" USING hnsw ("embedding" vector_cosine_ops);

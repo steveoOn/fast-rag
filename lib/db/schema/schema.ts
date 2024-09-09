@@ -1,32 +1,16 @@
-import { pgTable, unique, pgEnum, text, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  unique,
+  pgEnum,
+  text,
+  varchar,
+  timestamp,
+  integer,
+  vector,
+  index,
+} from 'drizzle-orm/pg-core';
 import { createId } from '@paralleldrive/cuid2';
 
-export const aal_level = pgEnum('aal_level', ['aal1', 'aal2', 'aal3']);
-export const code_challenge_method = pgEnum('code_challenge_method', ['s256', 'plain']);
-export const factor_status = pgEnum('factor_status', ['unverified', 'verified']);
-export const factor_type = pgEnum('factor_type', ['totp', 'webauthn', 'phone']);
-export const one_time_token_type = pgEnum('one_time_token_type', [
-  'confirmation_token',
-  'reauthentication_token',
-  'recovery_token',
-  'email_change_token_new',
-  'email_change_token_current',
-  'phone_change_token',
-]);
-export const key_status = pgEnum('key_status', ['default', 'valid', 'invalid', 'expired']);
-export const key_type = pgEnum('key_type', [
-  'aead-ietf',
-  'aead-det',
-  'hmacsha512',
-  'hmacsha256',
-  'auth',
-  'shorthash',
-  'generichash',
-  'kdf',
-  'secretbox',
-  'secretstream',
-  'stream_xchacha20',
-]);
 export const access_token_status = pgEnum('access_token_status', ['active', 'inactive']);
 export const client_status = pgEnum('client_status', ['disabled', 'active', 'pending']);
 export const document_type = pgEnum('document_type', [
@@ -48,11 +32,11 @@ export const document_type = pgEnum('document_type', [
 export const access_tokens = pgTable(
   'access_tokens',
   {
-    id: text('id')
+    id: varchar('id', { length: 255 })
       .$defaultFn(() => createId())
       .primaryKey()
       .notNull(),
-    client_id: text('client_id')
+    client_id: varchar('client_id', { length: 255 })
       .notNull()
       .references(() => clients.id, { onDelete: 'cascade' }),
     token: varchar('token', { length: 255 }).notNull(),
@@ -71,7 +55,7 @@ export const access_tokens = pgTable(
 export const clients = pgTable(
   'clients',
   {
-    id: text('id')
+    id: varchar('id', { length: 255 })
       .$defaultFn(() => createId())
       .primaryKey()
       .notNull(),
@@ -89,11 +73,11 @@ export const clients = pgTable(
 );
 
 export const document_versions = pgTable('document_versions', {
-  id: text('id')
+  id: varchar('id', { length: 255 })
     .$defaultFn(() => createId())
     .primaryKey()
     .notNull(),
-  document_id: text('document_id')
+  document_id: varchar('document_id', { length: 255 })
     .notNull()
     .references(() => documents.id, { onDelete: 'cascade' }),
   version: integer('version').notNull(),
@@ -102,11 +86,11 @@ export const document_versions = pgTable('document_versions', {
 });
 
 export const documents = pgTable('documents', {
-  id: text('id')
+  id: varchar('id', { length: 255 })
     .$defaultFn(() => createId())
     .primaryKey()
     .notNull(),
-  client_id: text('client_id')
+  client_id: varchar('client_id', { length: 255 })
     .notNull()
     .references(() => clients.id, { onDelete: 'cascade' }),
   name: varchar('name', { length: 255 }).notNull(),
@@ -116,15 +100,21 @@ export const documents = pgTable('documents', {
   updated_at: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
 });
 
-export const embeddings = pgTable('embeddings', {
-  id: text('id')
-    .$defaultFn(() => createId())
-    .primaryKey()
-    .notNull(),
-  document_version_id: text('document_version_id')
-    .notNull()
-    .references(() => document_versions.id, { onDelete: 'cascade' }),
-  content: text('content').notNull(),
-  embedding: varchar('embedding', { length: 1536 }).notNull(),
-  created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
-});
+export const embeddings = pgTable(
+  'embeddings',
+  {
+    id: varchar('id', { length: 255 })
+      .$defaultFn(() => createId())
+      .primaryKey()
+      .notNull(),
+    document_version_id: varchar('document_version_id', { length: 255 })
+      .notNull()
+      .references(() => document_versions.id, { onDelete: 'cascade' }),
+    content: text('content').notNull(),
+    embedding: vector('embedding', { dimensions: 1536 }).notNull(),
+    created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
+  },
+  (table) => ({
+    embeddingIndex: index('embeddingIndex').using('hnsw', table.embedding.op('vector_cosine_ops')),
+  })
+);

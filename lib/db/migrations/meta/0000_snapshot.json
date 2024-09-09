@@ -1,6 +1,6 @@
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "prevId": "",
+  "id": "384b7b00-253e-463c-a9a0-755e3f40dced",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -10,13 +10,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
         "client_id": {
           "name": "client_id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -60,7 +60,6 @@
           "name": "access_tokens_client_id_clients_id_fk",
           "tableFrom": "access_tokens",
           "tableTo": "clients",
-          "schemaTo": "public",
           "columnsFrom": ["client_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -70,9 +69,9 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "access_tokens_token_unique": {
-          "columns": ["token"],
+          "name": "access_tokens_token_unique",
           "nullsNotDistinct": false,
-          "name": "access_tokens_token_unique"
+          "columns": ["token"]
         }
       }
     },
@@ -82,7 +81,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
@@ -126,9 +125,9 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "clients_api_key_unique": {
-          "columns": ["api_key"],
+          "name": "clients_api_key_unique",
           "nullsNotDistinct": false,
-          "name": "clients_api_key_unique"
+          "columns": ["api_key"]
         }
       }
     },
@@ -138,13 +137,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
         "document_id": {
           "name": "document_id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -174,7 +173,6 @@
           "name": "document_versions_document_id_documents_id_fk",
           "tableFrom": "document_versions",
           "tableTo": "documents",
-          "schemaTo": "public",
           "columnsFrom": ["document_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -190,13 +188,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
         "client_id": {
           "name": "client_id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -240,7 +238,6 @@
           "name": "documents_client_id_clients_id_fk",
           "tableFrom": "documents",
           "tableTo": "clients",
-          "schemaTo": "public",
           "columnsFrom": ["client_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -256,13 +253,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
         "document_version_id": {
           "name": "document_version_id",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -274,7 +271,7 @@
         },
         "embedding": {
           "name": "embedding",
-          "type": "varchar(1536)",
+          "type": "vector(1536)",
           "primaryKey": false,
           "notNull": true
         },
@@ -286,13 +283,29 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "embeddingIndex": {
+          "name": "embeddingIndex",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_cosine_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "embeddings_document_version_id_document_versions_id_fk": {
           "name": "embeddings_document_version_id_document_versions_id_fk",
           "tableFrom": "embeddings",
           "tableTo": "document_versions",
-          "schemaTo": "public",
           "columnsFrom": ["document_version_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -304,72 +317,19 @@
     }
   },
   "enums": {
-    "auth.aal_level": {
-      "name": "aal_level",
-      "values": ["aal1", "aal2", "aal3"],
-      "schema": "auth"
-    },
-    "auth.code_challenge_method": {
-      "name": "code_challenge_method",
-      "values": ["s256", "plain"],
-      "schema": "auth"
-    },
-    "auth.factor_status": {
-      "name": "factor_status",
-      "values": ["unverified", "verified"],
-      "schema": "auth"
-    },
-    "auth.factor_type": {
-      "name": "factor_type",
-      "values": ["totp", "webauthn", "phone"],
-      "schema": "auth"
-    },
-    "auth.one_time_token_type": {
-      "name": "one_time_token_type",
-      "values": [
-        "confirmation_token",
-        "reauthentication_token",
-        "recovery_token",
-        "email_change_token_new",
-        "email_change_token_current",
-        "phone_change_token"
-      ],
-      "schema": "auth"
-    },
-    "pgsodium.key_status": {
-      "name": "key_status",
-      "values": ["default", "valid", "invalid", "expired"],
-      "schema": "pgsodium"
-    },
-    "pgsodium.key_type": {
-      "name": "key_type",
-      "values": [
-        "aead-ietf",
-        "aead-det",
-        "hmacsha512",
-        "hmacsha256",
-        "auth",
-        "shorthash",
-        "generichash",
-        "kdf",
-        "secretbox",
-        "secretstream",
-        "stream_xchacha20"
-      ],
-      "schema": "pgsodium"
-    },
     "public.access_token_status": {
       "name": "access_token_status",
-      "values": ["active", "inactive"],
-      "schema": "public"
+      "schema": "public",
+      "values": ["active", "inactive"]
     },
     "public.client_status": {
       "name": "client_status",
-      "values": ["disabled", "active", "pending"],
-      "schema": "public"
+      "schema": "public",
+      "values": ["disabled", "active", "pending"]
     },
     "public.document_type": {
       "name": "document_type",
+      "schema": "public",
       "values": [
         "pdf",
         "ppt",
@@ -384,17 +344,14 @@
         "rtf",
         "json",
         "image"
-      ],
-      "schema": "public"
+      ]
     }
   },
   "schemas": {},
+  "sequences": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "internal": {
     "tables": {}
   }
 }
