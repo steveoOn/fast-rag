@@ -3,10 +3,13 @@ import { ErrorResponse, CustomError } from '@/types';
 
 export function handleError(error: unknown): ErrorResponse {
   if (error instanceof CustomError) {
-    logger.error('🚗 Custom Error:', {
-      message: error.message,
-      code: error.code,
-      details: error.details,
+    logger.error({
+      msg: 'Custom Error',
+      error: {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+      },
       stack: error.stack,
     });
 
@@ -17,22 +20,28 @@ export function handleError(error: unknown): ErrorResponse {
   }
 
   if (error instanceof Error) {
-    logger.error('🚗 Error:', {
-      message: error.message,
-      name: error.name,
+    logger.error({
+      msg: 'Unexpected Error',
+      error: {
+        message: error.message,
+        name: error.name,
+      },
       stack: error.stack,
     });
 
     return {
-      message: '操作失败',
-      code: 'UNKNOWN_ERROR',
+      message: '操作失败，请稍后重试',
+      code: 'UNEXPECTED_ERROR',
     };
   }
 
-  logger.error('🚗 Unknown Error:', error);
+  logger.error({
+    msg: 'Unknown Error',
+    error,
+  });
 
   return {
-    message: '未知错误',
+    message: '发生未知错误，请联系支持团队',
     code: 'UNKNOWN_ERROR',
   };
 }
