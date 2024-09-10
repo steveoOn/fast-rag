@@ -15,6 +15,13 @@
       "when": 1725965042238,
       "tag": "0001_bouncy_toad_men",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1725971567392,
+      "tag": "0002_tan_mandrill",
+      "breakpoints": true
     }
   ]
 }

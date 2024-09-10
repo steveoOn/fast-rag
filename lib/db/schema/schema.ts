@@ -70,6 +70,7 @@ export const clients = pgTable(
   (table) => {
     return {
       clients_api_key_unique: unique('clients_api_key_unique').on(table.api_key),
+      clients_name_unique: unique('clients_name_unique').on(table.name), // 添加唯一约束
     };
   }
 );

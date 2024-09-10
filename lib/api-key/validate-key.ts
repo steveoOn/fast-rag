@@ -26,7 +26,8 @@ export async function validateAPIKey(key: string): Promise<boolean> {
   const calculatedSignature = crypto
     .createHmac('sha256', SERVER_SECRET_KEY)
     .update(dataToSign)
-    .digest('hex');
+    .digest('base64url')
+    .slice(0, 16);
 
   if (calculatedSignature !== receivedSignature) {
     throw new CustomError('API 密钥验证失败', 'API_KEY_VALIDATION_FAILED');
