@@ -10,6 +10,8 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { createId } from '@paralleldrive/cuid2';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 export const access_token_status = pgEnum('access_token_status', ['active', 'inactive']);
 export const client_status = pgEnum('client_status', ['disabled', 'active', 'pending']);
@@ -60,7 +62,7 @@ export const clients = pgTable(
       .primaryKey()
       .notNull(),
     name: varchar('name', { length: 255 }).notNull(),
-    api_key: varchar('api_key', { length: 255 }).notNull(),
+    api_key: varchar('api_key', { length: 255 }),
     status: client_status('status').default('pending').notNull(),
     created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
     updated_at: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
@@ -118,3 +120,12 @@ export const embeddings = pgTable(
     embeddingIndex: index('embeddingIndex').using('hnsw', table.embedding.op('vector_cosine_ops')),
   })
 );
+
+export const clientsSchema = createInsertSchema(clients);
+export const clientsSelectSchema = createSelectSchema(clients);
+export const access_tokensSchema = createInsertSchema(access_tokens);
+export const access_tokensSelectSchema = createSelectSchema(access_tokens);
+export type Client = z.infer<typeof clientsSelectSchema>;
+export type ClientInsert = z.infer<typeof clientsSchema>;
+export type AccessToken = z.infer<typeof access_tokensSelectSchema>;
+export type AccessTokenInsert = z.infer<typeof access_tokensSchema>;
