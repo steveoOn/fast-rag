@@ -3,14 +3,14 @@ import { db } from '../db';
 import { access_tokens, AccessToken, clients } from '../db/schema/schema';
 import { generateAPIKey } from '../api-key/generate-key';
 import { handleError } from '../utils';
-import { CustomError } from '@/types';
-import { eq } from 'drizzle-orm';
+import { CustomError, ErrorResponse } from '@/types';
+import { eq, and, not } from 'drizzle-orm';
 
 export async function createAccessToken(
   clientId: string,
   description?: string,
   status: AccessToken['status'] = 'active'
-): Promise<AccessToken | { error: ReturnType<typeof handleError> }> {
+): Promise<AccessToken | { error: ErrorResponse }> {
   try {
     return await db.transaction(async (tx) => {
       // 检查客户端是否存在
@@ -40,6 +40,15 @@ export async function createAccessToken(
       if (!newToken) {
         throw new CustomError('创建访问令牌失败', 'ACCESS_TOKEN_CREATION_FAILED');
       }
+
+      // 将其他令牌设置为非活动状态
+      await tx
+        .update(access_tokens)
+        .set({ status: 'inactive' })
+        .where(and(eq(access_tokens.client_id, clientId), not(eq(access_tokens.id, newToken.id))));
+
+      // 更新客户端的 api_key
+      await tx.update(clients).set({ api_key: newToken.token }).where(eq(clients.id, clientId));
 
       return newToken;
     });
