@@ -1,3 +1,4 @@
+'use server';
 import { db } from '../db';
 import { clients, access_tokens } from '../db/schema/schema';
 import { eq } from 'drizzle-orm';
