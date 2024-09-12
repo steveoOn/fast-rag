@@ -4,6 +4,8 @@ import { uploadFileToStorage } from '@/lib/actions';
 import { UploadFile, CustomError } from '@/types';
 import { mimeTypeToDocumentType, extractApiKey, handleError } from '@/lib/utils';
 
+export const runtime = 'edge';
+
 const uploadFileSchema = z.object({
   file: z.instanceof(Blob, { message: '文件必须是 Blob 类型' }),
   metadata: z.record(z.unknown()).optional(),

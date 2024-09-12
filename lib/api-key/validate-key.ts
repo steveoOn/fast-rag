@@ -1,4 +1,5 @@
-import crypto from 'crypto';
+import { hmac } from '@noble/hashes/hmac';
+import { sha256 } from '@noble/hashes/sha256';
 import { db } from '@/lib/db';
 import { clients } from '@/lib/db/schema/schema';
 import { eq } from 'drizzle-orm';
@@ -23,10 +24,10 @@ export async function validateAPIKey(key: string): Promise<boolean> {
   }
 
   const dataToSign = `${client.id}:${prefix}:${secret}`;
-  const calculatedSignature = crypto
-    .createHmac('sha256', SERVER_SECRET_KEY)
-    .update(dataToSign)
-    .digest('base64url')
+  const calculatedSignature = Buffer.from(hmac(sha256, SERVER_SECRET_KEY, dataToSign))
+    .toString('base64')
+    .replace(/[+/]/g, '-')
+    .replace(/=/g, '')
     .slice(0, 16);
 
   if (calculatedSignature !== receivedSignature) {

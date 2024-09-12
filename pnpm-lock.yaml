@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@noble/hashes':
+        specifier: ^1.5.0
+        version: 1.5.0
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2

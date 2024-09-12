@@ -1,10 +1,15 @@
-import crypto from 'crypto';
+import { hmac } from '@noble/hashes/hmac';
+import { sha256 } from '@noble/hashes/sha256';
+import { randomBytes } from '@noble/hashes/utils';
 import { APIKey } from '@/types/api-key';
 import { SERVER_SECRET_KEY } from '@/constant';
 
 export function generateAPIKey(clientId: string): APIKey {
-  const prefix = crypto.randomBytes(3).toString('hex'); // 6 characters
-  const secret = crypto.randomBytes(16).toString('base64url'); // ~22 characters, URL-safe
+  const prefix = Buffer.from(randomBytes(3)).toString('hex');
+  const secret = Buffer.from(randomBytes(16))
+    .toString('base64')
+    .replace(/[+/]/g, '-')
+    .replace(/=/g, '');
 
   const dataToSign = `${clientId}:${prefix}:${secret}`;
 
@@ -12,11 +17,11 @@ export function generateAPIKey(clientId: string): APIKey {
     throw new Error('SERVER_SECRET_KEY is not defined');
   }
 
-  const signature = crypto
-    .createHmac('sha256', SERVER_SECRET_KEY)
-    .update(dataToSign)
-    .digest('base64url')
-    .slice(0, 16); // ~22 characters truncated to 16, URL-safe
+  const signature = Buffer.from(hmac(sha256, SERVER_SECRET_KEY, dataToSign))
+    .toString('base64')
+    .replace(/[+/]/g, '-')
+    .replace(/=/g, '')
+    .slice(0, 16);
 
   const fullKey = `${prefix}.${secret}.${signature}`;
 
