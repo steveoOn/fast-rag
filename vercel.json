@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/v1/files-management/upload/*.ts": {
+      "maxDuration": 120,
+      "memory": 3009
+    }
+  }
+}

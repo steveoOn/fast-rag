@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { validateAPIKey } from '@/lib/api-key';
 import { handleError, extractApiKey } from '@/lib/utils';
 
-export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
