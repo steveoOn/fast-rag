@@ -1,6 +1,7 @@
 import pino from 'pino';
+import { Logger } from 'pino';
 
-let logger;
+let logger: Logger;
 
 if (process.env.VERCEL) {
   // Vercel 生产环境配置

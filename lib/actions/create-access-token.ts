@@ -2,8 +2,7 @@
 import { db } from '../db';
 import { access_tokens, AccessToken, clients } from '../db/schema/schema';
 import { generateAPIKey } from '../api-key/generate-key';
-import { handleError } from '../utils';
-import { CustomError, ErrorResponse } from '@/types';
+import { CustomError } from '@/types';
 import { eq, and, not } from 'drizzle-orm';
 
 export async function createAccessToken(
