@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { validateAPIKey } from '@/lib/api-key';
 import { handleError, extractApiKey } from '@/lib/utils';
 
+export const runtime = 'edge';
+
 export async function GET(request: Request) {
   try {
     const apiKey = extractApiKey(request);

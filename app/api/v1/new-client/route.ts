@@ -3,6 +3,8 @@ import { createClientWithApiKey } from '@/lib/actions';
 import { z } from 'zod';
 import { handleError } from '@/lib/utils';
 
+export const runtime = 'edge';
+
 const createClientSchema = z.object({
   clientName: z
     .string()

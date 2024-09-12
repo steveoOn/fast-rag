@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { createAccessToken } from '@/lib/actions';
 import { handleError } from '@/lib/utils';
 
+export const runtime = 'edge';
+
 const createApiKeySchema = z.object({
   clientId: z.string().min(1, 'Client ID is required'),
   tokenDescription: z.string().optional(),

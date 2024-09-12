@@ -8,6 +8,8 @@ const setActiveKeySchema = z.object({
   tokenId: z.string().min(1, '令牌ID是必需的'),
 });
 
+export const runtime = 'edge';
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
