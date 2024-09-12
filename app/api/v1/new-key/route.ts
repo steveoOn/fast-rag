@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createAccessToken } from '@/lib/actions/create-access-token';
+import { createAccessToken } from '@/lib/actions';
+import { handleError } from '@/lib/utils';
 
 const createApiKeySchema = z.object({
   clientId: z.string().min(1, 'Client ID is required'),
@@ -14,15 +15,15 @@ export async function POST(request: Request) {
 
     const result = await createAccessToken(clientId, tokenDescription);
 
-    if ('error' in result) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
-    }
-
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
-    }
-    return NextResponse.error();
+    const { message, code, details } = handleError(error);
+    const status =
+      code === 'UNEXPECTED_ERROR' || code === 'UNKNOWN_ERROR'
+        ? 500
+        : code === 'VALIDATION_ERROR'
+          ? 400
+          : 400;
+    return NextResponse.json({ error: message, details, code }, { status });
   }
 }

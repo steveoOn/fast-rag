@@ -59,6 +59,6 @@ export async function uploadFileToStorage(file: UploadFile, apiKey: string): Pro
       upload.start();
     });
   } catch (error) {
-    throw handleError(error);
+    throw error;
   }
 }

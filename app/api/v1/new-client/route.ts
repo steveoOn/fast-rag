@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClientWithApiKey } from '@/lib/actions/create-client';
+import { createClientWithApiKey } from '@/lib/actions';
 import { z } from 'zod';
+import { handleError } from '@/lib/utils';
 
 const createClientSchema = z.object({
   clientName: z
@@ -17,15 +18,15 @@ export async function POST(request: Request) {
 
     const result = await createClientWithApiKey(clientName, tokenDescription);
 
-    if ('error' in result) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
-    }
-
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
-    }
-    return NextResponse.error();
+    const { message, code, details } = handleError(error);
+    const status =
+      code === 'VALIDATION_ERROR'
+        ? 400
+        : code === 'UNEXPECTED_ERROR' || code === 'UNKNOWN_ERROR'
+          ? 500
+          : 400;
+    return NextResponse.json({ error: message, details, code }, { status });
   }
 }

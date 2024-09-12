@@ -130,3 +130,4 @@ export type Client = z.infer<typeof clientsSelectSchema>;
 export type ClientInsert = z.infer<typeof clientsSchema>;
 export type AccessToken = z.infer<typeof access_tokensSelectSchema>;
 export type AccessTokenInsert = z.infer<typeof access_tokensSchema>;
+export type DocumentType = (typeof document_type.enumValues)[number];

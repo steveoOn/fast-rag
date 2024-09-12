@@ -1,5 +1,6 @@
 import { logger } from '../logger';
 import { ErrorResponse, CustomError } from '@/types';
+import { ZodError } from 'zod';
 
 export function handleError(error: unknown): ErrorResponse {
   if (error instanceof CustomError) {
@@ -16,6 +17,19 @@ export function handleError(error: unknown): ErrorResponse {
     return {
       message: error.message,
       code: error.code,
+    };
+  }
+
+  if (error instanceof ZodError) {
+    logger.error({
+      msg: 'Validation Error',
+      error: error.errors,
+    });
+
+    return {
+      message: '参数验证失败',
+      code: 'VALIDATION_ERROR',
+      details: error.errors.map((error) => error.message).join(', '),
     };
   }
 
