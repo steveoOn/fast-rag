@@ -3,9 +3,8 @@ import { nanoid } from 'nanoid';
 import { UploadFile } from '@/types';
 import * as tus from 'tus-js-client';
 import { SUPABASE_PUBLIC_ANON_KEY, SUPABASE_URL } from 'constant';
-import { handleError } from '@/lib/utils/error';
-import { logger } from '@/lib/utils/logger';
-import { validateAPIKey } from '@/lib/api-key/validate-key';
+import { logger, handleError, sanitizeFileName } from '@/lib/utils';
+import { validateAPIKey } from '@/lib/api-key';
 import { Readable } from 'stream';
 import { Buffer } from 'buffer';
 
@@ -16,7 +15,8 @@ export async function uploadFileToStorage(file: UploadFile, apiKey: string): Pro
     await validateAPIKey(apiKey);
 
     const bucket = 'file-uploader-test';
-    const path = `${nanoid()}-${file.name}`;
+    const sanitizedFileName = sanitizeFileName(file.name);
+    const path = `${nanoid()}-${sanitizedFileName}`;
 
     // 创建 Readable 流
     const fileStream = Readable.from(Buffer.from(file.buffer));
@@ -36,7 +36,7 @@ export async function uploadFileToStorage(file: UploadFile, apiKey: string): Pro
           objectName: path,
           contentType: file.type,
           cacheControl: '3600',
-          filename: file.name,
+          filename: sanitizedFileName,
           ...(file.metadata && { customMetadata: JSON.stringify(file.metadata) }),
         },
         chunkSize: 6 * 1024 * 1024, // 6MB
