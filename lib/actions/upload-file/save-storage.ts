@@ -2,11 +2,17 @@ import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { UploadFile } from '@/types';
 import * as tus from 'tus-js-client';
+import { z } from 'zod';
 import { SUPABASE_PUBLIC_ANON_KEY, SUPABASE_URL } from 'constant';
-import { logger, handleError, sanitizeFileName } from '@/lib/utils';
+import { logger, handleError, sanitizeFileName, mimeTypeToDocumentType } from '@/lib/utils';
 import { validateAPIKey } from '@/lib/api-key';
 import { Readable } from 'stream';
 import { Buffer } from 'buffer';
+
+const uploadFileSchema = z.object({
+  file: z.instanceof(Blob, { message: '文件必须是 Blob 类型' }),
+  // metadata: z.record(z.unknown()).optional(),
+});
 
 const supabase = createClient(SUPABASE_URL!, SUPABASE_PUBLIC_ANON_KEY!);
 
@@ -61,4 +67,39 @@ export async function uploadFileToStorage(file: UploadFile, apiKey: string): Pro
   } catch (error) {
     throw error;
   }
+}
+
+export async function upload(files: File[], apiKey: string) {
+  const allPromise = [];
+
+  for await (const file of files) {
+    const validatedData = uploadFileSchema.parse({
+      file,
+      // metadata: parsedMetadata,
+    });
+
+    const buffer = Buffer.from(await validatedData.file.arrayBuffer());
+
+    const uploadFile: UploadFile = {
+      name: file.name,
+      type: mimeTypeToDocumentType(file.type, file.name),
+      size: file.size,
+      lastModified: file.lastModified,
+      extension: file.name.split('.').pop() || '',
+      buffer,
+      // metadata: validatedData.metadata,
+    };
+
+    allPromise.push(uploadFileToStorage(uploadFile, apiKey));
+  }
+
+  const res = await Promise.allSettled(allPromise);
+
+  return res.map((item) => {
+    return {
+      success: item.status === 'fulfilled',
+      url: item.status === 'fulfilled' ? item.value : undefined,
+      error: item.status === 'rejected' ? item.reason : undefined,
+    };
+  });
 }
