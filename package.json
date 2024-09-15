@@ -27,6 +27,7 @@
     "@supabase/supabase-js": "^2.45.4",
     "@t3-oss/env-nextjs": "^0.10.1",
     "ai": "^3.3.30",
+    "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

@@ -1,3 +1,9 @@
+import Embedding from '@/components/modules/embedding';
+
 export default function Chat() {
-  return <main>Hello, world!</main>;
+  return (
+    <main>
+      <Embedding />
+    </main>
+  );
 }
