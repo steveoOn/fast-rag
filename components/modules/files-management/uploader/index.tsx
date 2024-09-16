@@ -1,6 +1,6 @@
 'use client';
 import { Input } from '@/components/ui/input';
-import { post } from '@/lib/request';
+import api from '@/lib/request';
 
 export default function Uploader() {
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,7 +11,7 @@ export default function Uploader() {
         formData.append(`${index}`, file);
       });
 
-      const response = await post('/api/v1/files-management/upload', formData, {
+      const response = await api.post('/files-management/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
