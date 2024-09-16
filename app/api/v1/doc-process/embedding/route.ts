@@ -1,30 +1,31 @@
 import { NextResponse } from 'next/server';
 import { handleError } from '@/lib/utils';
-import { parsePDFToString } from '@/lib/actions/doc-process/read-pdf';
-import { chunkDocumentByParagraph } from '@/lib/actions/doc-process/chunks';
-import { embedding } from '@/lib/actions/doc-process/embedding';
+import { embedding, chunkDocumentByParagraph, parsePDFToString, loadFile } from '@/lib/actions';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const filePath: string = `${process.cwd()}/app/api/v1/doc-process/embedding/1.pdf`;
+    const files = await loadFile(body.files);
+    console.log(files);
+
+    // const filePath: string = `${process.cwd()}/app/api/v1/doc-process/embedding/1.pdf`;
 
     // const text = fs.readFileSync(
     //   `${process.cwd()}/app/api/v1/doc-process/embedding/doc.txt`,
     //   'utf-8'
     // );
 
-    const text = await parsePDFToString(filePath);
+    // const text = await parsePDFToString(filePath);
 
-    const chunks = chunkDocumentByParagraph(text, {
-      chunkOverlap: 300,
-      chunkSize: 1000,
-    });
+    // const chunks = chunkDocumentByParagraph(text, {
+    //   chunkOverlap: 300,
+    //   chunkSize: 1000,
+    // });
 
-    const contents = chunks.map((chunk) => chunk.content);
+    // const contents = chunks.map((chunk) => chunk.content);
 
-    const embeddings = await embedding(contents);
+    // const embeddings = await embedding(contents);
 
     return NextResponse.json(body, { status: 201 });
   } catch (error) {
