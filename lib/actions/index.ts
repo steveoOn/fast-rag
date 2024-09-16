@@ -4,3 +4,7 @@ export * from './create-client';
 export * from './files-management/upload/save-storage';
 export * from './files-management/upload/add-doc';
 export * from './files-management/get-files';
+export * from './doc-process/chunks';
+export * from './doc-process/load-files';
+export * from './doc-process/read-pdf';
+export * from './doc-process/embedding';
