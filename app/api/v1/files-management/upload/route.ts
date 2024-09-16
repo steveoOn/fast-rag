@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     const uploadFiles = res.filter((item) => item.success && item.file).map((item) => item.file);
 
     const insertRes = await addDoc(uploadFiles as FileUploadRes[], apiKey);
-    console.log(insertRes, '***');
     return NextResponse.json({ data: insertRes }, { status: 201 });
   } catch (error) {
     const { message, code, details } = handleError(error);
