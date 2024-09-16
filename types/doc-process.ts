@@ -23,7 +23,18 @@ export const ParagraphSchema = z.object({
   end: z.number(),
 });
 
+export const ReadFileSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  content: z.string(),
+  size: z.number(),
+  type: z.string(),
+  created_at: z.date(),
+  updated_at: z.date(),
+});
+
 // 派生类型
 export type Chunk = z.infer<typeof ChunkSchema>;
 export type ChunkOptions = z.infer<typeof ChunkOptionsSchema>;
+export type ReadFile = z.infer<typeof ReadFileSchema>;
 export type Paragraph = z.infer<typeof ParagraphSchema>;

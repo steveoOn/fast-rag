@@ -8,3 +8,4 @@ export * from './doc-process/chunks';
 export * from './doc-process/load-files';
 export * from './doc-process/read-pdf';
 export * from './doc-process/embedding';
+export * from './doc-process/read-files/index';
