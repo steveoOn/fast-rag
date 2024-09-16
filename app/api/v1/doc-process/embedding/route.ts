@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { handleError } from '@/lib/utils';
-import { embedding, chunkDocumentByParagraph, parsePDFToString, loadFile } from '@/lib/actions';
+import { loadFile } from '@/lib/actions';
 
 export async function POST(request: Request) {
   try {
