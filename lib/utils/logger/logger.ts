@@ -28,10 +28,18 @@ if (process.env.VERCEL) {
     },
     stream
   );
+} else if (process.env.NODE_ENV === 'production') {
+  // Docker生产环境配置
+  logger = pino({
+    level: 'info',
+    base: {
+      env: process.env.NODE_ENV,
+    },
+  });
 } else {
   // 本地开发环境配置
   logger = pino({
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    level: 'debug',
     transport: {
       target: 'pino-pretty',
       options: {

@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['pino'],
   },
+  output: 'standalone',
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -12,11 +13,11 @@ const nextConfig = {
         fs: false,
         pg: false,
         postgres: false,
-        perf_hooks: false
+        perf_hooks: false,
       };
     }
     return config;
-  }
+  },
 };
 
 export default nextConfig;
