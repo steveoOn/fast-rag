@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
-import { UploadFile } from '@/types';
+import { UploadFile, FileUploadRes } from '@/types';
 import * as tus from 'tus-js-client';
 import { z } from 'zod';
 import { SUPABASE_PUBLIC_ANON_KEY, SUPABASE_URL } from 'constant';
@@ -16,7 +16,7 @@ const uploadFileSchema = z.object({
 
 const supabase = createClient(SUPABASE_URL!, SUPABASE_PUBLIC_ANON_KEY!);
 
-export async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<string> {
+async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<FileUploadRes> {
   try {
     await validateAPIKey(apiKey);
 
@@ -58,7 +58,15 @@ export async function uploadFileToStorage(file: UploadFile, apiKey: string): Pro
         onSuccess: () => {
           logger.info('上传成功');
           const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
-          resolve(urlData.publicUrl);
+
+          resolve({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            lastModified: file.lastModified,
+            extension: file.extension,
+            uploadURL: urlData.publicUrl,
+          });
         },
       });
 
@@ -98,7 +106,7 @@ export async function upload(files: File[], apiKey: string) {
   return res.map((item) => {
     return {
       success: item.status === 'fulfilled',
-      url: item.status === 'fulfilled' ? item.value : undefined,
+      file: item.status === 'fulfilled' ? item.value : undefined,
       error: item.status === 'rejected' ? item.reason : undefined,
     };
   });
