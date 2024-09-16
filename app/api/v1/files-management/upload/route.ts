@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
-import { upload } from '@/lib/actions';
-import { CustomError } from '@/types';
+import { upload, addDoc } from '@/lib/actions';
+import { CustomError, FileUploadRes } from '@/types';
 import { extractApiKey, handleError } from '@/lib/utils';
-
-export const maxDuration = 120;
-
-const uploadFileSchema = z.object({
-  file: z.instanceof(Blob, { message: '文件必须是 Blob 类型' }),
-  // metadata: z.record(z.unknown()).optional(),
-});
 
 export async function POST(request: Request) {
   try {
@@ -24,8 +16,11 @@ export async function POST(request: Request) {
     }
 
     const res = await upload(files, apiKey);
+    const uploadFiles = res.filter((item) => item.success && item.file).map((item) => item.file);
 
-    return NextResponse.json({ data: res }, { status: 201 });
+    const insertRes = await addDoc(uploadFiles as FileUploadRes[], apiKey);
+    console.log(insertRes, '***');
+    return NextResponse.json({ data: insertRes }, { status: 201 });
   } catch (error) {
     const { message, code, details } = handleError(error);
     const status =

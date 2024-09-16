@@ -7,7 +7,6 @@ import { embedding } from '@/lib/actions/doc-process/embedding';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log(body);
 
     const filePath: string = `${process.cwd()}/app/api/v1/doc-process/embedding/1.pdf`;
 
@@ -23,15 +22,9 @@ export async function POST(request: Request) {
       chunkSize: 1000,
     });
 
-    console.log(chunks.length);
-
     const contents = chunks.map((chunk) => chunk.content);
-    try {
-      const embeddings = await embedding(contents);
-      console.log(embeddings);
-    } catch (error) {
-      console.log(error);
-    }
+
+    const embeddings = await embedding(contents);
 
     return NextResponse.json(body, { status: 201 });
   } catch (error) {

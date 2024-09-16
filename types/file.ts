@@ -18,3 +18,14 @@ export type FileMetadata = z.infer<typeof FileSchema>;
 export type UploadFile = Omit<FileMetadata, 'uploadURL' | 'id'> & {
   buffer: Buffer;
 };
+
+export const FileUploadResSchema = z.object({
+  name: z.string(), // 文件名
+  type: z.enum(document_type.enumValues), // MIME 类型
+  size: z.number(), // 文件大小（字节）
+  uploadURL: z.string().url().optional(), // 文件在存储中的 URL（可选，因为上传前可能没有）
+  lastModified: z.number(), // 最后修改时间戳
+  extension: z.string(), // 文件扩展名
+});
+
+export type FileUploadRes = z.infer<typeof FileUploadResSchema>;
