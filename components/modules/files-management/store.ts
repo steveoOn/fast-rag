@@ -14,6 +14,23 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
   setTable: (table: Table<TableData>) => {
     set({ table });
   },
+  uploadFiles: async (e) => {
+    const { getTableData } = get();
+    const files = e.target?.files;
+    if (files) {
+      const formData = new FormData();
+      Array.from(files).forEach((file, index) => {
+        formData.append(`file-${index}`, file);
+      });
+
+      await api.post('/files-management/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      getTableData();
+    }
+  },
   getTableData: async () => {
     const response = await api.get('/files-management/list');
     const { data } = response;
@@ -23,7 +40,19 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     const { table, getTableData } = get();
     if (!table) return;
     const fileIds = getSelectedFiles(table);
+    if (!fileIds?.length) return;
     await api.post('/files-management/delete', { fileIds });
+    getTableData();
+  },
+  embed: async () => {
+    const { table, getTableData } = get();
+    if (!table) return;
+    const files = getSelectedFiles(table);
+    if (!files?.length) return;
+    const res = await api.post('/doc-process/embedding', {
+      files,
+    });
+    console.log(res);
     getTableData();
   },
 }));

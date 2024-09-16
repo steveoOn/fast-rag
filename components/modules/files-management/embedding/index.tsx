@@ -1,18 +1,8 @@
-'use client';
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import useFilesManagementStore from '../store';
 
 export default function Embedding() {
-  return (
-    <Button
-      onClick={async () => {
-        const res = await axios.post('/api/v1/doc-process/embedding', {
-          files: ['1', '2'],
-        });
-        console.log(res);
-      }}
-    >
-      file chunks
-    </Button>
-  );
+  const { embed } = useFilesManagementStore();
+
+  return <Button onClick={embed}>Embedding</Button>;
 }

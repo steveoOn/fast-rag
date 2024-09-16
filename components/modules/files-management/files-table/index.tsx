@@ -24,7 +24,6 @@ import {
 } from '@/components/ui/table';
 import { TableData } from '@/types/files-data';
 import useFilesManagementStore from '../store';
-import { Table as TableType, Row } from '@tanstack/react-table';
 
 export default function FilesTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
