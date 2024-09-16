@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { TableData } from '@/types/files-data';
+import { TableData } from '@/types';
 import useFilesManagementStore from '../store';
 
 export default function FilesTable() {
