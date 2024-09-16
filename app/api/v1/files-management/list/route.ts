@@ -8,7 +8,7 @@ export async function GET(request: Request) {
 
     const filesList = await getFiles(apiKey);
 
-    return NextResponse.json({ data: filesList }, { status: 201 });
+    return NextResponse.json(filesList, { status: 201 });
   } catch (error) {
     const { message, code, details } = handleError(error);
     const status =

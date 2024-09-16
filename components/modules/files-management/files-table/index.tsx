@@ -35,7 +35,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { TableData } from '@/types/files-data';
-import { get, del } from '@/lib/request';
+import api from '@/lib/request';
 
 export const columns: ColumnDef<TableData>[] = [
   {
@@ -92,7 +92,7 @@ export const columns: ColumnDef<TableData>[] = [
               onClick={async () => {
                 const { id } = row.original;
                 if (!id) return;
-                const res = await del(`/api/v1/files-management/delete`, {
+                const res = await api.del(`/files-management/delete`, {
                   data: { fileIds: [id] },
                 });
                 console.log(res);
@@ -107,26 +107,23 @@ export const columns: ColumnDef<TableData>[] = [
   },
 ];
 
-export function FilesTable(props: { data: TableData[] }) {
+export function FilesTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const { data, isLoading } = useSWR<{ data: { data: TableData[] }; isLoading: boolean }>(
-    '/api/v1/files-management/list',
-    get
-  );
+  const { data, isLoading } = useSWR<{ data: TableData[] }>('/files-management/list', api.get);
 
   const [filesData, setData] = React.useState<TableData[]>([]);
 
   React.useEffect(() => {
     if (data && !isLoading) {
-      setData(data.data?.data || []);
+      setData(data.data || []);
     }
   }, [data, isLoading]);
 
   const table = useReactTable({
-    data: props.data,
+    data: filesData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
