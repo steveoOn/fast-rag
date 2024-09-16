@@ -1,8 +1,11 @@
 'use client';
 import { Input } from '@/components/ui/input';
 import api from '@/lib/request';
+import useFilesManagementStore from '../store';
 
 export default function Uploader() {
+  const { getTableData } = useFilesManagementStore();
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -11,12 +14,12 @@ export default function Uploader() {
         formData.append(`${index}`, file);
       });
 
-      const response = await api.post('/files-management/upload', formData, {
+      await api.post('/files-management/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(response);
+      getTableData();
     }
   };
 

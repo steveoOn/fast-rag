@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { extractApiKey, handleError } from '@/lib/utils';
 import { delFiles } from '@/lib/actions/files-management/delete';
 
-export async function DELETE(request: Request) {
+export async function POST(request: Request) {
   try {
     const apiKey = extractApiKey(request);
     const body = await request.json();

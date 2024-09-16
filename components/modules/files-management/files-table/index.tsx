@@ -1,8 +1,5 @@
 'use client';
-
 import * as React from 'react';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import useSWR from 'swr';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,17 +12,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -35,95 +23,58 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { TableData } from '@/types/files-data';
-import api from '@/lib/request';
+import useFilesManagementStore from '../store';
+import { Table as TableType, Row } from '@tanstack/react-table';
 
-export const columns: ColumnDef<TableData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'name',
-    header: '文件名',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('name')}</div>,
-  },
-  {
-    accessorKey: 'version',
-    header: '版本',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('version')}</div>,
-  },
-  {
-    accessorKey: 'created_at',
-    header: '上传时间',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('created_at')}</div>,
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={async () => {
-                const { id } = row.original;
-                if (!id) return;
-                const res = await api.del(`/files-management/delete`, {
-                  data: { fileIds: [id] },
-                });
-                console.log(res);
-              }}
-            >
-              删除
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-export function FilesTable() {
+export default function FilesTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const { data, isLoading } = useSWR<{ data: TableData[] }>('/files-management/list', api.get);
+  const { tableData, setTable } = useFilesManagementStore();
 
-  const [filesData, setData] = React.useState<TableData[]>([]);
-
-  React.useEffect(() => {
-    if (data && !isLoading) {
-      setData(data.data || []);
-    }
-  }, [data, isLoading]);
+  const columns: ColumnDef<TableData>[] = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: 'name',
+      header: '文件名',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('name')}</div>,
+    },
+    {
+      accessorKey: 'version',
+      header: '版本',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('version')}</div>,
+    },
+    {
+      accessorKey: 'created_at',
+      header: '上传时间',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('created_at')}</div>,
+    },
+  ];
 
   const table = useReactTable({
-    data: filesData,
+    data: tableData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -141,16 +92,12 @@ export function FilesTable() {
     },
   });
 
+  React.useEffect(() => {
+    setTable(table);
+  }, [setTable, table]);
+
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="筛选文件"
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
-      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
