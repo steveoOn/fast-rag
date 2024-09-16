@@ -68,6 +68,14 @@ jobs:
             SERVER_SECRET_KEY=${{ secrets.SERVER_SECRET_KEY }}
             NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
             NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          outputs: type=docker,dest=/tmp/myimage.tar
+
+      - name: Display structure of built image
+        if: failure()
+        run: |
+          docker load --input /tmp/myimage.tar
+          docker image ls
+          docker history $(docker images -q | head -n 1)
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
