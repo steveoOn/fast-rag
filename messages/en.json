@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": "Home"
+  },
+  "Auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "welcome": "Hello, {name}",
+    "SignUpPage": {
+      "alreadyHaveAnAccount": "Already have an account?",
+      "email": "Email",
+      "password": "Password",
+      "passwordPlaceholder": "Your password"
+    },
+    "SignInPage": {
+      "title": "Sign In"
+    }
+  }
+}

@@ -1,9 +1,7 @@
-import FilesManagement from '@/components/modules/files-management';
-
 export default function Page() {
   return (
-    <main>
-      <FilesManagement />
-    </main>
+    <div>
+      <h1>Welcome to Wolian AI</h1>
+    </div>
   );
 }

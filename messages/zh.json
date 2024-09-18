@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": "首页"
+  },
+  "Auth": {
+    "signIn": "登录",
+    "signUp": "注册",
+    "signOut": "登出",
+    "welcome": "你好，{name}",
+    "SignUpPage": {
+      "alreadyHaveAnAccount": "已有账号？",
+      "email": "邮箱",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码"
+    },
+    "SignInPage": {
+      "title": "登录"
+    }
+  }
+}

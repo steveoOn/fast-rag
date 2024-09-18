@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": "ホーム"
+  },
+  "Auth": {
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "signOut": "サインアウト",
+    "welcome": "こんにちは、{name}",
+    "SignUpPage": {
+      "alreadyHaveAnAccount": "すでにアカウントをお持ちの場合は、こちら",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordPlaceholder": "パスワードを入力してください"
+    },
+    "SignInPage": {
+      "title": "サインイン"
+    }
+  }
+}
