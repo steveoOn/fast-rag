@@ -31,6 +31,7 @@
       "title": "Reset Password",
       "email": "Email",
       "resetPassword": "Reset Password",
+      "resetPasswordLoading": "Sending...",
       "alreadyHaveAnAccount": "Already have an account?",
       "forgotPassword": "Forgot Password?",
       "forgotPasswordLoading": "Sending...",

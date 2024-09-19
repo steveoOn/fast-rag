@@ -25,7 +25,10 @@ export default function ForgotPassword({ searchParams }: { searchParams: Message
         <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
           <Label htmlFor="email">{t('ForgotPasswordPage.email')}</Label>
           <Input name="email" placeholder="you@example.com" required />
-          <SubmitButton formAction={forgotPasswordAction}>
+          <SubmitButton
+            pendingText={t('ForgotPasswordPage.resetPasswordLoading')}
+            formAction={forgotPasswordAction}
+          >
             {t('ForgotPasswordPage.resetPassword')}
           </SubmitButton>
           <FormMessage message={searchParams} />
