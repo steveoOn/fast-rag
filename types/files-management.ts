@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Table, Row } from '@tanstack/react-table';
+import { Table } from '@tanstack/react-table';
 
 export const TableDataSchema = z.object({
   id: z.string(),

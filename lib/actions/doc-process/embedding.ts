@@ -7,10 +7,10 @@
 // const model = ollama.textEmbeddingModel('mxbai-embed-large');
 
 // export async function embedding(values: string[]) {
-//   const embedding = await model.doEmbed({
+//   const embedRes = await model.doEmbed({
 //     values,
 //   });
-//   return embedding;
+//   return embedRes.embeddings;
 // }
 
 import { embedMany } from 'ai';

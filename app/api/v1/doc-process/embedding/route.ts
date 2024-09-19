@@ -1,32 +1,48 @@
 import { NextResponse } from 'next/server';
-import { handleError } from '@/lib/utils';
-import { loadFile } from '@/lib/actions';
+import { db } from '@/lib/db';
+import { embeddings } from '@/lib/db/schema/schema';
+import { handleError, logger } from '@/lib/utils';
+import { loadFile, readFile, embedding } from '@/lib/actions';
+import { EmbedData } from '@/types';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body: { files: string[] } = await request.json();
+    logger.info(`embedding body: ${JSON.stringify(body)}`);
+    const { files } = body;
 
-    const files = await loadFile(body.files);
-    console.log(files);
+    const allPromise = files.map(async (fileId: string) => {
+      // 下载文档
+      const file = await loadFile(fileId);
+      logger.info(`files loaded: ${file.name}`);
+      // 读取文档内容并chunk
+      const chunkRes = await readFile(file);
+      const chunks = chunkRes.chunks.map((chunk) => chunk.content);
+      // 向量化
+      const embed = await embedding(chunks);
 
-    // const filePath: string = `${process.cwd()}/app/api/v1/doc-process/embedding/1.pdf`;
+      if (chunks.length !== embed.length) return [];
 
-    // const text = fs.readFileSync(
-    //   `${process.cwd()}/app/api/v1/doc-process/embedding/doc.txt`,
-    //   'utf-8'
-    // );
+      return chunks.map((chunk, index) => ({
+        document_version_id: file.document_version_id,
+        content: chunk,
+        embedding: embed[index],
+        document_version: file.version,
+      }));
+    });
 
-    // const text = await parsePDFToString(filePath);
+    const allEmbedRes = await Promise.allSettled(allPromise);
 
-    // const chunks = chunkDocumentByParagraph(text, {
-    //   chunkOverlap: 300,
-    //   chunkSize: 1000,
-    // });
+    const embedData = allEmbedRes.reduce<EmbedData[]>((acc, result) => {
+      if (result.status === 'fulfilled') {
+        return [...acc, ...result.value];
+      }
+      return acc;
+    }, []);
 
-    // const contents = chunks.map((chunk) => chunk.content);
-
-    // const embeddings = await embedding(contents);
-
+    logger.info(`embedData length: ${embedData.length}`);
+    await db.insert(embeddings).values(embedData);
+    logger.info('embedding inserted');
     return NextResponse.json(body, { status: 201 });
   } catch (error) {
     const { message, code, details } = handleError(error);
