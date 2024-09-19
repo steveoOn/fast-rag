@@ -3,9 +3,9 @@ import { documents, document_versions } from '@/lib/db/schema/schema';
 import { eq } from 'drizzle-orm';
 import axios from 'axios';
 
-async function fetchFileContent(url: string): Promise<string> {
+async function fetchFileContent(url: string): Promise<ArrayBuffer> {
   try {
-    const response = await axios.get(url, { responseType: 'text' });
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

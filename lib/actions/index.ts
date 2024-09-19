@@ -6,6 +6,5 @@ export * from './files-management/upload/add-doc';
 export * from './files-management/get-files';
 export * from './doc-process/chunks';
 export * from './doc-process/load-file';
-export * from './doc-process/read-pdf';
 export * from './doc-process/embedding';
 export * from './doc-process/read-file';

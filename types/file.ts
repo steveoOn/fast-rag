@@ -33,7 +33,7 @@ export const FileUploadResSchema = z.object({
 export const FileLoadedSchema = z.object({
   id: z.string(),
   name: z.string(),
-  content: z.string(),
+  content: z.instanceof(ArrayBuffer),
   type: z.enum(document_type.enumValues),
   created_at: z.string(),
   updated_at: z.string(),
