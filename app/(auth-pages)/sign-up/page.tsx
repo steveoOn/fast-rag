@@ -45,7 +45,11 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <SmtpMessage />
+      <SmtpMessage
+        message={t('SignUpPage.smtpMessage')}
+        linkText={t('SignUpPage.smtpLinkText')}
+        linkHref="/"
+      />
     </>
   );
 }

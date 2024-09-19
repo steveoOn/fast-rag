@@ -11,10 +11,22 @@
       "alreadyHaveAnAccount": "已有账号？",
       "email": "邮箱",
       "password": "密码",
-      "passwordPlaceholder": "请输入密码"
+      "passwordPlaceholder": "请输入密码",
+      "smtpMessage": "注册后我们会向您发送一封验证邮件, 您需要点击邮件中的链接以验证您的邮箱。",
+      "smtpLinkText": "了解详情"
     },
     "SignInPage": {
-      "title": "登录"
+      "dontHaveAnAccount": "没有账号？",
+      "email": "邮箱",
+      "password": "密码",
+      "forgotPassword": "忘记密码？",
+      "passwordPlaceholder": "请输入密码"
     }
+  },
+  "LanguageSelector": {
+    "selectLanguage": "选择语言",
+    "en": "英语",
+    "ja": "日语",
+    "zh": "中文"
   }
 }

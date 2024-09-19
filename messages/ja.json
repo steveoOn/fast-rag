@@ -11,10 +11,22 @@
       "alreadyHaveAnAccount": "すでにアカウントをお持ちの場合は、こちら",
       "email": "メールアドレス",
       "password": "パスワード",
-      "passwordPlaceholder": "パスワードを入力してください"
+      "passwordPlaceholder": "パスワードを入力してください",
+      "smtpMessage": "登録後、メールを送信してメールアドレスを確認します。メールのリンクをクリックしてメールアドレスを確認してください。",
+      "smtpLinkText": "詳細はこちら"
     },
     "SignInPage": {
-      "title": "サインイン"
+      "dontHaveAnAccount": "アカウントがない場合?",
+      "email": "メール",
+      "password": "パスワード",
+      "forgotPassword": "パスワードを忘れた場合",
+      "passwordPlaceholder": "パスワードを入力"
     }
+  },
+  "LanguageSelector": {
+    "selectLanguage": "言語を選択",
+    "en": "英語",
+    "ja": "日本語",
+    "zh": "中国語"
   }
 }

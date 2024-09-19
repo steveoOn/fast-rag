@@ -11,10 +11,22 @@
       "alreadyHaveAnAccount": "Already have an account?",
       "email": "Email",
       "password": "Password",
-      "passwordPlaceholder": "Your password"
+      "passwordPlaceholder": "Your password",
+      "smtpMessage": "After registration, we will send you an email to verify your email address. You need to click the link in the email to verify your email address.",
+      "smtpLinkText": "Learn more"
     },
     "SignInPage": {
-      "title": "Sign In"
+      "dontHaveAnAccount": "Don't have an account?",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "passwordPlaceholder": "Your password"
     }
+  },
+  "LanguageSelector": {
+    "selectLanguage": "Select Language",
+    "en": "English",
+    "ja": "Japanese",
+    "zh": "Chinese"
   }
 }
