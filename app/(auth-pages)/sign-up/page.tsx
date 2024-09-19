@@ -39,7 +39,7 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
             minLength={6}
             required
           />
-          <SubmitButton formAction={signUpAction} pendingText="Signing up...">
+          <SubmitButton formAction={signUpAction} pendingText={t('SignUpPage.signUpLoading')}>
             {t('signUp')}
           </SubmitButton>
           <FormMessage message={searchParams} />

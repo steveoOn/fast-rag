@@ -33,7 +33,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
           placeholder={t('SignInPage.passwordPlaceholder')}
           required
         />
-        <SubmitButton pendingText="Signing In..." formAction={signInAction}>
+        <SubmitButton pendingText={t('SignInPage.signInLoading')} formAction={signInAction}>
           {t('signIn')}
         </SubmitButton>
         <FormMessage message={searchParams} />

@@ -11,16 +11,47 @@
       "alreadyHaveAnAccount": "Already have an account?",
       "email": "Email",
       "password": "Password",
-      "passwordPlaceholder": "Your password",
-      "smtpMessage": "After registration, we will send you an email to verify your email address. You need to click the link in the email to verify your email address.",
-      "smtpLinkText": "Learn more"
+      "passwordPlaceholder": "Enter your password",
+      "smtpMessage": "After registration, we will send you an email to verify your email address. Please check your email, some email providers may mark it as spam.",
+      "smtpLinkText": "Learn more",
+      "signUpLoading": "Signing up...",
+      "signUpSuccess": "Thank you for signing up! Please check your email for a verification link.",
+      "emailAlreadyRegistered": "Email already registered",
+      "emailAndPasswordRequired": "Email and password are required"
     },
     "SignInPage": {
       "dontHaveAnAccount": "Don't have an account?",
       "email": "Email",
       "password": "Password",
       "forgotPassword": "Forgot Password?",
-      "passwordPlaceholder": "Your password"
+      "passwordPlaceholder": "Enter your password",
+      "signInLoading": "Signing in..."
+    },
+    "ForgotPasswordPage": {
+      "title": "Reset Password",
+      "email": "Email",
+      "resetPassword": "Reset Password",
+      "alreadyHaveAnAccount": "Already have an account?",
+      "forgotPassword": "Forgot Password?",
+      "forgotPasswordLoading": "Sending...",
+      "forgotPasswordSuccess": "Please check your email for a link to reset your password.",
+      "emailRequired": "Email is required",
+      "couldNotResetPassword": "Could not reset password",
+      "passwordRequired": "Password and confirmation are required",
+      "passwordMismatch": "Passwords do not match",
+      "passwordUpdateFailed": "Password update failed",
+      "passwordUpdated": "Password updated",
+      "smtpMessage": "After resetting your password, you will receive an email. Please click the link in the email to reset your password."
+    },
+    "ResetPasswordPage": {
+      "title": "Reset Password",
+      "enterYourNewPassword": "Please enter your new password below",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "resetPassword": "Reset Password",
+      "resetPasswordLoading": "Resetting..."
     }
   },
   "LanguageSelector": {

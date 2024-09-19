@@ -12,15 +12,46 @@
       "email": "邮箱",
       "password": "密码",
       "passwordPlaceholder": "请输入密码",
-      "smtpMessage": "注册后我们会向您发送一封验证邮件, 您需要点击邮件中的链接以验证您的邮箱。",
-      "smtpLinkText": "了解详情"
+      "smtpMessage": "注册后我们会向您发送一封验证邮件，请仔细检查您的邮箱，一些邮件服务商可能会将其标记为垃圾邮件。",
+      "smtpLinkText": "了解详情",
+      "signUpLoading": "注册中...",
+      "signUpSuccess": "感谢您注册！请检查您的邮箱中收到的邮件，并点击验证链接以验证您的邮箱。",
+      "emailAlreadyRegistered": "邮箱已注册",
+      "emailAndPasswordRequired": "邮箱和密码是必需的"
     },
     "SignInPage": {
       "dontHaveAnAccount": "没有账号？",
       "email": "邮箱",
       "password": "密码",
       "forgotPassword": "忘记密码？",
-      "passwordPlaceholder": "请输入密码"
+      "passwordPlaceholder": "请输入密码",
+      "signInLoading": "登录中..."
+    },
+    "ForgotPasswordPage": {
+      "title": "重置密码",
+      "email": "邮箱",
+      "resetPassword": "重置密码",
+      "alreadyHaveAnAccount": "已有账号？",
+      "forgotPassword": "忘记密码？",
+      "forgotPasswordLoading": "发送中...",
+      "forgotPasswordSuccess": "请检查您的邮箱中收到的邮件，并点击邮件中的链接重置您的密码。",
+      "emailRequired": "邮箱是必需的",
+      "couldNotResetPassword": "无法重置密码",
+      "passwordRequired": "密码和确认密码是必需的",
+      "passwordMismatch": "密码不匹配",
+      "passwordUpdateFailed": "密码更新失败",
+      "passwordUpdated": "密码已更新",
+      "smtpMessage": "重置密码后您的邮箱会收到一封邮件，请点击邮件中的链接重置您的密码。"
+    },
+    "ResetPasswordPage": {
+      "title": "重置密码",
+      "enterYourNewPassword": "请在下方输入您的新密码",
+      "newPassword": "新密码",
+      "newPasswordPlaceholder": "请输入新密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "请再次输入新密码",
+      "resetPassword": "重置密码",
+      "resetPasswordLoading": "重置中..."
     }
   },
   "LanguageSelector": {

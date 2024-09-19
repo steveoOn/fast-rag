@@ -6,21 +6,52 @@
     "signIn": "サインイン",
     "signUp": "サインアップ",
     "signOut": "サインアウト",
-    "welcome": "こんにちは、{name}",
+    "welcome": "こんにちは、{name}さん",
     "SignUpPage": {
-      "alreadyHaveAnAccount": "すでにアカウントをお持ちの場合は、こちら",
+      "alreadyHaveAnAccount": "すでにアカウントをお持ちですか？",
       "email": "メールアドレス",
       "password": "パスワード",
       "passwordPlaceholder": "パスワードを入力してください",
-      "smtpMessage": "登録後、メールを送信してメールアドレスを確認します。メールのリンクをクリックしてメールアドレスを確認してください。",
-      "smtpLinkText": "詳細はこちら"
+      "smtpMessage": "登録後、メールアドレス確認のためのメールをお送りします。メールをご確認ください。一部のメールプロバイダーでは迷惑メールとして扱われる場合があります。",
+      "smtpLinkText": "詳細はこちら",
+      "signUpLoading": "サインアップ中...",
+      "signUpSuccess": "ご登録ありがとうございます！確認リンクが記載されたメールをご確認ください。",
+      "emailAlreadyRegistered": "このメールアドレスは既に登録されています",
+      "emailAndPasswordRequired": "メールアドレスとパスワードは必須です"
     },
     "SignInPage": {
-      "dontHaveAnAccount": "アカウントがない場合?",
-      "email": "メール",
+      "dontHaveAnAccount": "アカウントをお持ちでない方はこちら",
+      "email": "メールアドレス",
       "password": "パスワード",
-      "forgotPassword": "パスワードを忘れた場合",
-      "passwordPlaceholder": "パスワードを入力"
+      "forgotPassword": "パスワードをお忘れですか？",
+      "passwordPlaceholder": "パスワードを入力してください",
+      "signInLoading": "サインイン中..."
+    },
+    "ForgotPasswordPage": {
+      "title": "パスワードのリセット",
+      "email": "メールアドレス",
+      "resetPassword": "パスワードをリセット",
+      "alreadyHaveAnAccount": "すでにアカウントをお持ちですか？",
+      "forgotPassword": "パスワードをお忘れですか？",
+      "forgotPasswordLoading": "送信中...",
+      "forgotPasswordSuccess": "パスワードリセット用のリンクをメールでお送りしました。メールをご確認ください。",
+      "emailRequired": "メールアドレスは必須です",
+      "couldNotResetPassword": "パスワードをリセットできませんでした",
+      "passwordRequired": "パスワードと確認用パスワードは必須です",
+      "passwordMismatch": "パスワードが一致しません",
+      "passwordUpdateFailed": "パスワードの更新に失敗しました",
+      "passwordUpdated": "パスワードが更新されました",
+      "smtpMessage": "パスワードリセット後、メールが送信されます。メール内のリンクをクリックしてパスワードをリセットしてください。"
+    },
+    "ResetPasswordPage": {
+      "title": "パスワードのリセット",
+      "enterYourNewPassword": "新しいパスワードを以下に入力してください",
+      "newPassword": "新しいパスワード",
+      "newPasswordPlaceholder": "新しいパスワードを入力",
+      "confirmPassword": "パスワードの確認",
+      "confirmPasswordPlaceholder": "新しいパスワードを再入力",
+      "resetPassword": "パスワードをリセット",
+      "resetPasswordLoading": "リセット中..."
     }
   },
   "LanguageSelector": {

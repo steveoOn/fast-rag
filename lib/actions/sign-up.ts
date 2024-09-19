@@ -4,18 +4,20 @@ import { encodedRedirect } from '@/lib/utils';
 import { createClient } from '@/lib/utils/supabase/server';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getTranslation } from '@/lib/utils';
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get('email')?.toString();
   const password = formData.get('password')?.toString();
   const supabase = createClient();
   const origin = headers().get('origin');
+  const locale = headers().get('Accept-Language')?.split(',')[0].split('-')[0] || 'en';
 
   if (!email || !password) {
-    return { error: 'Email and password are required' };
+    return { error: getTranslation(locale, 'Auth.SignUpPage.emailAndPasswordRequired') };
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -26,13 +28,22 @@ export const signUpAction = async (formData: FormData) => {
   if (error) {
     console.error(error.code + ' ' + error.message);
     return encodedRedirect('error', '/sign-up', error.message);
-  } else {
+  }
+
+  // 检查邮箱是否已注册
+  if (data.user && data.user.identities && data.user.identities.length === 0) {
     return encodedRedirect(
-      'success',
+      'error',
       '/sign-up',
-      'Thanks for signing up! Please check your email for a verification link.'
+      getTranslation(locale, 'Auth.SignUpPage.emailAlreadyRegistered')
     );
   }
+
+  return encodedRedirect(
+    'success',
+    '/sign-up',
+    getTranslation(locale, 'Auth.SignUpPage.signUpSuccess')
+  );
 };
 
 export const signInAction = async (formData: FormData) => {
@@ -57,9 +68,14 @@ export const forgotPasswordAction = async (formData: FormData) => {
   const supabase = createClient();
   const origin = headers().get('origin');
   const callbackUrl = formData.get('callbackUrl')?.toString();
+  const locale = headers().get('Accept-Language')?.split(',')[0].split('-')[0] || 'en';
 
   if (!email) {
-    return encodedRedirect('error', '/forgot-password', 'Email is required');
+    return encodedRedirect(
+      'error',
+      '/forgot-password',
+      getTranslation(locale, 'Auth.ForgotPasswordPage.emailRequired')
+    );
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -68,7 +84,11 @@ export const forgotPasswordAction = async (formData: FormData) => {
 
   if (error) {
     console.error(error.message);
-    return encodedRedirect('error', '/forgot-password', 'Could not reset password');
+    return encodedRedirect(
+      'error',
+      '/forgot-password',
+      getTranslation(locale, 'Auth.ForgotPasswordPage.couldNotResetPassword')
+    );
   }
 
   if (callbackUrl) {
@@ -78,13 +98,13 @@ export const forgotPasswordAction = async (formData: FormData) => {
   return encodedRedirect(
     'success',
     '/forgot-password',
-    'Check your email for a link to reset your password.'
+    getTranslation(locale, 'Auth.ForgotPasswordPage.forgotPasswordSuccess')
   );
 };
 
 export const resetPasswordAction = async (formData: FormData) => {
   const supabase = createClient();
-
+  const locale = headers().get('Accept-Language')?.split(',')[0].split('-')[0] || 'en';
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
 
@@ -92,12 +112,16 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       'error',
       '/platform/reset-password',
-      'Password and confirm password are required'
+      getTranslation(locale, 'Auth.ForgotPasswordPage.passwordRequired')
     );
   }
 
   if (password !== confirmPassword) {
-    encodedRedirect('error', '/platform/reset-password', 'Passwords do not match');
+    encodedRedirect(
+      'error',
+      '/platform/reset-password',
+      getTranslation(locale, 'Auth.ForgotPasswordPage.passwordMismatch')
+    );
   }
 
   const { error } = await supabase.auth.updateUser({
@@ -105,10 +129,18 @@ export const resetPasswordAction = async (formData: FormData) => {
   });
 
   if (error) {
-    encodedRedirect('error', '/platform/reset-password', 'Password update failed');
+    encodedRedirect(
+      'error',
+      '/platform/reset-password',
+      getTranslation(locale, 'Auth.ForgotPasswordPage.passwordUpdateFailed')
+    );
   }
 
-  encodedRedirect('success', '/platform/reset-password', 'Password updated');
+  encodedRedirect(
+    'success',
+    '/platform/reset-password',
+    getTranslation(locale, 'Auth.ForgotPasswordPage.passwordUpdated')
+  );
 };
 
 export const signOutAction = async () => {
