@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useTranslations } from 'next-intl';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -26,6 +27,7 @@ import { TableData } from '@/types';
 import useFilesManagementStore from '../store';
 
 export default function FilesTable() {
+  const t = useTranslations('FilesManagement');
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -57,17 +59,17 @@ export default function FilesTable() {
     },
     {
       accessorKey: 'name',
-      header: '文件名',
+      header: t('Column.fileName'),
       cell: ({ row }) => <div className="capitalize">{row.getValue('name')}</div>,
     },
     {
       accessorKey: 'version',
-      header: '版本',
+      header: t('Column.fileVersion'),
       cell: ({ row }) => <div className="capitalize">{row.getValue('version')}</div>,
     },
     {
       accessorKey: 'created_at',
-      header: '上传时间',
+      header: t('Column.createAt'),
       cell: ({ row }) => <div className="capitalize">{row.getValue('created_at')}</div>,
     },
   ];

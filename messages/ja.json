@@ -60,5 +60,16 @@
     "en": "英語",
     "ja": "日本語",
     "zh": "中国語"
+  },
+  "FilesManagement": {
+    "Column": {
+      "fileName": "ファイル名",
+      "fileVersion": "バージョン",
+      "createAt": "アップロード日時"
+    },
+    "Operation": {
+      "delete": "削除",
+      "embedding": "文書解析"
+    }
   }
 }

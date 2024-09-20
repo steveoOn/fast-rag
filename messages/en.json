@@ -60,5 +60,16 @@
     "en": "English",
     "ja": "Japanese",
     "zh": "Chinese"
+  },
+  "FilesManagement": {
+    "Column": {
+      "fileName": "File Name",
+      "fileVersion": "Version",
+      "createAt": "Upload Time"
+    },
+    "Operation": {
+      "delete": "Delete",
+      "embedding": "Document Analysis"
+    }
   }
 }
