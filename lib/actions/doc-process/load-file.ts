@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { documents, document_versions } from '@/lib/db/schema/schema';
+import { documents, document_versions, embeddings } from '@/lib/db/schema/schema';
 import { eq } from 'drizzle-orm';
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ async function fetchFileContent(url: string): Promise<ArrayBuffer> {
   }
 }
 
-export async function loadFile(fileId: string) {
+export async function loadFile(fileId: string, force?: boolean) {
   const queryDocument = db.select().from(documents).where(eq(documents.id, fileId));
   const versionQuery = db
     .select({ version: document_versions.version, id: document_versions.id })
@@ -23,6 +23,14 @@ export async function loadFile(fileId: string) {
     .where(eq(document_versions.document_id, fileId));
 
   const [[file], [versionResult]] = await Promise.all([queryDocument, versionQuery]);
+
+  const embeddingData = await db
+    .select({ id: embeddings.id })
+    .from(embeddings)
+    .where(eq(embeddings.document_version_id, versionResult.id));
+
+  // 已经做过向量化则跳过
+  if (!force && embeddingData?.length) return null;
 
   if (!file || !file.storage_url) {
     throw new Error('File not found or storage URL is missing');
