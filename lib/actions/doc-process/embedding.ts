@@ -1,18 +1,3 @@
-// import { createOllama } from 'ollama-ai-provider';
-
-// const ollama = createOllama({
-//   baseURL: 'https://api13b.bitewise.cc/api',
-// });
-
-// const model = ollama.textEmbeddingModel('mxbai-embed-large');
-
-// export async function embedding(values: string[]) {
-//   const embedRes = await model.doEmbed({
-//     values,
-//   });
-//   return embedRes.embeddings;
-// }
-
 import { embedMany } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 

@@ -51,8 +51,8 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     if (!files?.length) return;
     const res = await api.post('/doc-process/embedding', {
       files,
+      force: true,
     });
-    console.log(res);
     getTableData();
   },
 }));
