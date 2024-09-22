@@ -71,5 +71,52 @@
       "delete": "删除",
       "embedding": "文档解析"
     }
+  },
+  "Platform": {
+    "Sidebar": {
+      "home": "首页",
+      "clientsManagement": "客户端管理",
+      "dataManagement": "数据管理",
+      "resetPassword": "重置密码"
+    },
+    "Home": {
+      "title": "开始使用",
+      "subtitle": "创建账户、验证身份并连接服务。",
+      "CreateApiKey": {
+        "title": "创建 API Key",
+        "description": "创建和管理你的 API keys，以便访问我们的服务。",
+        "linkText": "管理 API Keys",
+        "Steps": {
+          "create": "创建新的 API key",
+          "switch": "切换不同的 API keys",
+          "newClient": "创建新的客户端",
+          "test": "测试 API key 的有效性"
+        }
+      },
+      "DataManagement": {
+        "title": "文件管理",
+        "description": "上传和管理你的文档，这些文档将被向量化以供 LLMs 使用。",
+        "linkText": "管理文件",
+        "Steps": {
+          "upload": "上传新文档",
+          "delete": "删除已有文档",
+          "view": "查看已上传的文档列表",
+          "parse": "解析文档"
+        }
+      }
+    },
+    "ClientsManagement": {
+      "title": "客户端管理",
+      "description": "创建、管理和删除你的客户端。",
+      "linkText": "管理客户端",
+      "Steps": {
+        "create": "创建",
+        "switch": "切换",
+        "newClient": "新客户端"
+      },
+      "clientCreatedDescription": "客户端 {name} 已创建",
+      "apiKeyCreatedDescription": "API Key 已创建",
+      "apiKeyActivatedDescription": "API Key 已激活"
+    }
   }
 }

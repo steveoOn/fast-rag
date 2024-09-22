@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import HeaderAuth from '@/components/header-auth';
 import LanguageSelector from '@/components/modules/language/language-selector-client';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 const defaultUrl = process.env.VERCEL_URL
@@ -39,13 +40,13 @@ export default async function RootLayout({
           <NextIntlClientProvider locale={locale} messages={messages}>
             <div className="min-h-screen flex flex-col">
               <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
-                <div className="max-w-7xl mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4">
+                <div className="max-w-7xl mx-auto flex justify-between items-center px-2 sm:px-4 lg:px-6 py-1">
                   <Link href="/">
                     <Image
                       src="/1024-t.svg"
                       alt="Wolian AI"
-                      width={40}
-                      height={40}
+                      width={20}
+                      height={20}
                       className="sm:w-12 sm:h-12 lg:w-16 lg:h-16"
                     />
                   </Link>
@@ -65,6 +66,7 @@ export default async function RootLayout({
             </div>
           </NextIntlClientProvider>
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

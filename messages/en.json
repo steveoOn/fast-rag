@@ -71,5 +71,52 @@
       "delete": "Delete",
       "embedding": "Document Analysis"
     }
+  },
+  "Platform": {
+    "Sidebar": {
+      "home": "Home",
+      "clientsManagement": "Clients Management",
+      "dataManagement": "Data Management",
+      "resetPassword": "Reset Password"
+    },
+    "Home": {
+      "title": "Getting Started",
+      "subtitle": "Create an account, verify your identity, and connect to our service.",
+      "CreateApiKey": {
+        "title": "Create API Key",
+        "description": "Create and manage your API keys to access our services.",
+        "linkText": "Manage API Keys",
+        "Steps": {
+          "create": "Create a new API key",
+          "switch": "Switch between different API keys",
+          "newClient": "Create a new client",
+          "test": "Test the validity of your API key"
+        }
+      },
+      "DataManagement": {
+        "title": "File Management",
+        "description": "Upload and manage your documents, which will be vectorized for use with LLMs.",
+        "linkText": "Manage Files",
+        "Steps": {
+          "upload": "Upload a new document",
+          "delete": "Delete an existing document",
+          "view": "View a list of uploaded documents",
+          "parse": "Parse a document"
+        }
+      }
+    },
+    "ClientsManagement": {
+      "title": "Clients Management",
+      "description": "Create, manage, and delete your clients.",
+      "linkText": "Manage Clients",
+      "Steps": {
+        "create": "Create",
+        "switch": "Switch",
+        "newClient": "New Client"
+      },
+      "clientCreatedDescription": "Client {name} created",
+      "apiKeyCreatedDescription": "API Key created",
+      "apiKeyActivatedDescription": "API Key activated"
+    }
   }
 }

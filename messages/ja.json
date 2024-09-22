@@ -71,5 +71,52 @@
       "delete": "削除",
       "embedding": "文書解析"
     }
+  },
+  "Platform": {
+    "Sidebar": {
+      "home": "ホーム",
+      "clientsManagement": "クライアント管理",
+      "dataManagement": "データ管理",
+      "resetPassword": "パスワードリセット"
+    },
+    "Home": {
+      "title": "はじめに",
+      "subtitle": "アカウントを作成し、身元を確認し、サービスに接続します。",
+      "CreateApiKey": {
+        "title": "API Key の作成",
+        "description": "API keys を作成し、管理して、サービスにアクセスします。",
+        "linkText": "API Key の管理",
+        "Steps": {
+          "create": "新しい API Key を作成",
+          "switch": "異なる API Key を切り替え",
+          "newClient": "新しいクライアントを作成",
+          "test": "API Key の有効性をテスト"
+        }
+      },
+      "DataManagement": {
+        "title": "ファイル管理",
+        "description": "ドキュメントをアップロードし、LLMs で使用するためにベクター化します。",
+        "linkText": "ファイルの管理",
+        "Steps": {
+          "upload": "新しいドキュメントをアップロード",
+          "delete": "既存のドキュメントを削除",
+          "view": "アップロードされたドキュメントのリストを表示",
+          "parse": "ドキュメントを解析"
+        }
+      }
+    },
+    "ClientsManagement": {
+      "title": "クライアント管理",
+      "description": "クライアントを作成、管理、削除します。",
+      "linkText": "クライアントの管理",
+      "Steps": {
+        "create": "作成",
+        "switch": "切り替え",
+        "newClient": "新しいクライアント"
+      },
+      "clientCreatedDescription": "クライアント {name} が作成されました",
+      "apiKeyCreatedDescription": "API Key が作成されました",
+      "apiKeyActivatedDescription": "API Key が有効になりました"
+    }
   }
 }
