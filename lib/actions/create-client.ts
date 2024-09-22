@@ -5,9 +5,11 @@ import { clients, Client, access_tokens, AccessToken } from '../db/schema/schema
 import { isClientNameUnique } from '../utils';
 import { CustomError } from '@/types';
 import { eq } from 'drizzle-orm';
+import { cacheApiKey } from '../redis/api-key-cache';
 
 export async function createClientWithApiKey(
   clientName: string,
+  userId: string,
   tokenDescription?: string
 ): Promise<{ client: Client; apiKey: string; accessToken: AccessToken }> {
   // 验证 clientName 格式
@@ -31,6 +33,7 @@ export async function createClientWithApiKey(
       .values({
         name: clientName,
         status: 'active',
+        user_id: userId,
       })
       .returning();
 
@@ -57,6 +60,9 @@ export async function createClientWithApiKey(
     if (!newToken) {
       throw new CustomError('创建访问令牌失败', 'ACCESS_TOKEN_CREATION_FAILED');
     }
+
+    // 缓存新的 API key 到 Redis
+    await cacheApiKey(newToken.token, newClient.id, newToken.status);
 
     return {
       client: newClient,

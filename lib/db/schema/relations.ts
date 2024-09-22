@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm/relations';
-import { clients, access_tokens, documents, document_versions, embeddings } from './schema';
+import { clients, users, access_tokens, documents, document_versions, embeddings } from './schema';
 
 export const access_tokensRelations = relations(access_tokens, ({ one }) => ({
   client: one(clients, {
@@ -8,9 +8,13 @@ export const access_tokensRelations = relations(access_tokens, ({ one }) => ({
   }),
 }));
 
-export const clientsRelations = relations(clients, ({ many }) => ({
+export const clientsRelations = relations(clients, ({ many, one }) => ({
   access_tokens: many(access_tokens),
   documents: many(documents),
+  user: one(users, {
+    fields: [clients.user_id],
+    references: [users.id],
+  }),
 }));
 
 export const document_versionsRelations = relations(document_versions, ({ one, many }) => ({
@@ -34,4 +38,8 @@ export const embeddingsRelations = relations(embeddings, ({ one }) => ({
     fields: [embeddings.document_version_id],
     references: [document_versions.id],
   }),
+}));
+
+export const userRelations = relations(users, ({ many }) => ({
+  clients: many(clients),
 }));

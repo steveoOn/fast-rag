@@ -8,8 +8,9 @@ import {
   integer,
   vector,
   index,
+  pgSchema,
+  uuid,
 } from 'drizzle-orm/pg-core';
-import { createId } from '@paralleldrive/cuid2';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
@@ -34,11 +35,8 @@ export const document_type = pgEnum('document_type', [
 export const access_tokens = pgTable(
   'access_tokens',
   {
-    id: varchar('id', { length: 255 })
-      .$defaultFn(() => createId())
-      .primaryKey()
-      .notNull(),
-    client_id: varchar('client_id', { length: 255 })
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    client_id: uuid('client_id')
       .notNull()
       .references(() => clients.id, { onDelete: 'cascade' }),
     token: varchar('token', { length: 255 }).notNull(),
@@ -54,33 +52,34 @@ export const access_tokens = pgTable(
   }
 );
 
+export const users = pgSchema('auth').table('users', {
+  id: uuid('id').primaryKey(),
+});
+
 export const clients = pgTable(
   'clients',
   {
-    id: varchar('id', { length: 255 })
-      .$defaultFn(() => createId())
-      .primaryKey()
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    user_id: uuid('user_id')
+      .references(() => users.id)
       .notNull(),
     name: varchar('name', { length: 255 }).notNull(),
     api_key: varchar('api_key', { length: 255 }),
-    status: client_status('status').default('pending').notNull(),
+    status: client_status('status').default('active').notNull(),
     created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
     updated_at: timestamp('updated_at', { mode: 'string' }).defaultNow().notNull(),
   },
   (table) => {
     return {
       clients_api_key_unique: unique('clients_api_key_unique').on(table.api_key),
-      clients_name_unique: unique('clients_name_unique').on(table.name), // 添加唯一约束
+      clients_name_user_unique: unique('clients_name_user_unique').on(table.name, table.user_id),
     };
   }
 );
 
 export const document_versions = pgTable('document_versions', {
-  id: varchar('id', { length: 255 })
-    .$defaultFn(() => createId())
-    .primaryKey()
-    .notNull(),
-  document_id: varchar('document_id', { length: 255 })
+  id: uuid('id').defaultRandom().primaryKey().notNull(),
+  document_id: uuid('document_id')
     .notNull()
     .references(() => documents.id, { onDelete: 'cascade' }),
   version: integer('version').notNull(),
@@ -89,11 +88,8 @@ export const document_versions = pgTable('document_versions', {
 });
 
 export const documents = pgTable('documents', {
-  id: varchar('id', { length: 255 })
-    .$defaultFn(() => createId())
-    .primaryKey()
-    .notNull(),
-  client_id: varchar('client_id', { length: 255 })
+  id: uuid('id').defaultRandom().primaryKey().notNull(),
+  client_id: uuid('client_id')
     .notNull()
     .references(() => clients.id, { onDelete: 'cascade' }),
   name: varchar('name', { length: 255 }).notNull(),
@@ -106,11 +102,8 @@ export const documents = pgTable('documents', {
 export const embeddings = pgTable(
   'embeddings',
   {
-    id: varchar('id', { length: 255 })
-      .$defaultFn(() => createId())
-      .primaryKey()
-      .notNull(),
-    document_version_id: varchar('document_version_id', { length: 255 })
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    document_version_id: uuid('document_version_id')
       .notNull()
       .references(() => document_versions.id, { onDelete: 'cascade' }),
     content: text('content').notNull(),

@@ -4,6 +4,7 @@ import { access_tokens, AccessToken, clients } from '../db/schema/schema';
 import { generateAPIKey } from '../api-key/generate-key';
 import { CustomError } from '@/types';
 import { eq, and, not } from 'drizzle-orm';
+import { cacheApiKey } from '../redis/api-key-cache';
 
 export async function createAccessToken(
   clientId: string,
@@ -39,14 +40,20 @@ export async function createAccessToken(
       throw new CustomError('创建访问令牌失败', 'ACCESS_TOKEN_CREATION_FAILED');
     }
 
-    // 将其他令牌设置为非活动状态
+    // 将当前客户端的其他令牌设置为非活动状态
     await tx
       .update(access_tokens)
       .set({ status: 'inactive' })
       .where(and(eq(access_tokens.client_id, clientId), not(eq(access_tokens.id, newToken.id))));
 
-    // 更新客户端的 api_key
-    await tx.update(clients).set({ api_key: newToken.token }).where(eq(clients.id, clientId));
+    // 更新客户端的 api_key 和 status
+    await tx
+      .update(clients)
+      .set({ api_key: newToken.token, status: 'active' })
+      .where(eq(clients.id, clientId));
+
+    // 缓存新的 API key 到 Redis
+    await cacheApiKey(newToken.token, clientId, newToken.status);
 
     return newToken;
   });
