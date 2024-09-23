@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { content, system } = body;
-    const messages = convertToCoreMessages(content);
+    const messages = convertToCoreMessages(body.messages);
 
     if (!messages.length) return NextResponse.json({ data: 'no messages' }, { status: 201 });
     const question = messages[0].content as string;
