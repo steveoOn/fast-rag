@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { createOpenAI } from '@ai-sdk/openai';
 import { queryEmbeddings } from '@/lib/actions';
 import { handleError } from '@/lib/utils';
+import { CustomError } from '@/types';
 
 const openai = createOpenAI({
   baseURL: 'https://api.ohmygpt.com/v1/',
@@ -17,7 +18,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const messages = convertToCoreMessages(body.messages);
 
-    if (!messages.length) return NextResponse.json({ data: 'no messages' }, { status: 201 });
+    if (!messages.length) {
+      throw new CustomError('请正确提问', 'QUESTION_ERROR');
+    }
     const question = messages[0].content as string;
 
     const queryRes = await generateText({

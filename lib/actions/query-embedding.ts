@@ -5,7 +5,6 @@ import { embedding } from './doc-process/embedding';
 
 export async function queryEmbeddings(question: string) {
   const questionEmbedding = await embedding([question]);
-  if (!questionEmbedding?.length) return;
   const similarity = sql<number>`1 - (${cosineDistance(embeddings.embedding, questionEmbedding[0])})`;
 
   const queryRes = await db.select().from(embeddings).where(gt(similarity, 0.6)).limit(4);
