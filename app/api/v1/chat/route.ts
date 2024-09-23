@@ -15,14 +15,14 @@ const model = openai.languageModel('gpt-4o-2024-08-06');
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { content, system } = body;
+    const { content } = body;
     const messages = convertToCoreMessages(content);
 
     if (!messages.length) return NextResponse.json({ data: 'no messages' }, { status: 201 });
     const question = messages[0].content as string;
 
     const queryRes = await generateText({
-      system: system || `在回答任何问题之前，请先检查你的知识库。`,
+      system: `在回答任何问题之前，请先检查你的知识库。`,
       model,
       messages,
       tools: {
