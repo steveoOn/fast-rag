@@ -9,6 +9,7 @@ export * from './unique-verification';
 export * from './file-utils';
 export * from './auth';
 export * from './translations';
+export * from './extract-api-key';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

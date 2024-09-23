@@ -3,7 +3,7 @@ import { FormMessage, Message } from '@/components/form-message';
 import { SubmitButton } from '@/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AuthTranslations } from '@/components/auth-translations';
+import AuthTranslations from '@/components/auth-translations';
 import { HashRedirect } from './hash-redirect';
 
 export default async function ResetPassword({

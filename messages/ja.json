@@ -71,5 +71,99 @@
       "delete": "削除",
       "embedding": "文書解析"
     }
+  },
+  "Platform": {
+    "Sidebar": {
+      "home": "ホーム",
+      "clientsManagement": "クライアント管理",
+      "dataManagement": "データ管理",
+      "resetPassword": "パスワードリセット"
+    },
+    "Home": {
+      "title": "はじめに",
+      "subtitle": "アカウントを作成し、身元を確認し、サービスに接続します。",
+      "CreateApiKey": {
+        "title": "API Key の作成",
+        "description": "API keys を作成し、管理して、サービスにアクセスします。",
+        "linkText": "API Key の管理",
+        "Steps": {
+          "create": "新しい API Key を作成",
+          "switch": "異なる API Key を切り替え",
+          "newClient": "新しいクライアントを作成",
+          "test": "API Key の有効性をテスト"
+        }
+      },
+      "DataManagement": {
+        "title": "ファイル管理",
+        "description": "ドキュメントをアップロードし、LLMs で使用するためにベクター化します。",
+        "linkText": "ファイルの管理",
+        "Steps": {
+          "upload": "新しいドキュメントをアップロード",
+          "delete": "既存のドキュメントを削除",
+          "view": "アップロードされたドキュメントのリストを表示",
+          "parse": "ドキュメントを解析"
+        }
+      }
+    },
+    "ClientsManagement": {
+      "title": "クライアント管理",
+      "subtitle": "クライアントを作成、管理、削除します。",
+      "linkText": "クライアントの管理",
+      "status": "ステータス",
+      "apiKey": "API Key",
+      "noApiKey": "API Key なし",
+      "createNewApiKey": "新規キー作成",
+      "setActive": "有効",
+      "showApiKey": "表示",
+      "hideApiKey": "非表示",
+      "active": "有効",
+      "inactive": "無効",
+      "manageKeys": "キー管理",
+      "enterClientName": "クライアント名を入力してください",
+      "clientNamePlaceholder": "クライアント名、英数字とアンダースコアのみ",
+      "Steps": {
+        "create": "作成",
+        "switch": "切り替え",
+        "newClient": "新しいクライアント"
+      },
+      "clientCreatedDescription": "クライアント {name} が作成されました。同時に API Key が作成されました。",
+      "apiKeyCreatedDescription": "API Key が作成されました",
+      "apiKeyActivatedDescription": "API Key が有効になりました"
+    },
+    "KeyManagement": {
+      "title": "API Key 管理",
+      "subtitle": "API Key を作成、管理、削除します。",
+      "description": "説明",
+      "noDescription": "未設定",
+      "status": "ステータス",
+      "token": "キー",
+      "createdAt": "作成日時",
+      "createNewToken": "新しいキーを作成",
+      "active": "有効",
+      "inactive": "無効",
+      "activate": "有効にする",
+      "backToClients": "クライアントに戻る",
+      "noTokens": "未作成のキーはありません",
+      "Toast": {
+        "tokenCreated": "キーが作成されました",
+        "tokenCreatedDescription": "キーが正常に作成されました",
+        "tokenCreationFailed": "キーの作成に失敗しました",
+        "tokenActivationFailed": "キーの有効化に失敗しました",
+        "tokenCopied": "キーがコピーされました",
+        "tokenCopiedDescription": "キーが正常にコピーされました",
+        "tokenActivated": "キーが有効になりました",
+        "tokenActivatedDescription": "キーが正常に有効になりました"
+      }
+    }
+  },
+  "Utils": {
+    "CopyButton": {
+      "success": "コピー成功",
+      "error": "コピーエラー",
+      "manualCopy": "手動でコピーしてください"
+    },
+    "Error": {
+      "unknown": "未知のエラー"
+    }
   }
 }

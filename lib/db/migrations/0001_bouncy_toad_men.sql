@@ -1,1 +1,0 @@
-ALTER TABLE "clients" ALTER COLUMN "api_key" DROP NOT NULL;

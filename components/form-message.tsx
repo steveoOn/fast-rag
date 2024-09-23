@@ -6,15 +6,19 @@ export function FormMessage({ message }: { message: Message }): [JSX.Element, bo
   const messageElement = (
     <div className="flex flex-col gap-2 w-full max-w-md text-sm">
       {'success' in message && (
-        <div className="text-foreground border-l-2 border-foreground px-4">{message.success}</div>
+        <div className="text-foreground border-l-2 border-foreground px-4 dark:text-dark-foreground dark:border-dark-foreground">
+          {message.success}
+        </div>
       )}
       {'error' in message && (
-        <div className="text-destructive-foreground border-l-2 border-destructive-foreground px-4">
+        <div className="text-destructive-foreground border-l-2 border-destructive-foreground px-4 dark:text-dark-destructive-foreground dark:border-dark-destructive-foreground">
           {message.error}
         </div>
       )}
       {'message' in message && (
-        <div className="text-foreground border-l-2 px-4">{message.message}</div>
+        <div className="text-foreground border-l-2 px-4 dark:text-dark-foreground dark:border-dark-foreground">
+          {message.message}
+        </div>
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import { signOutAction } from '@/lib/actions/sign-up';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { createClient } from '@/lib/utils/supabase/server';
-import { AuthTranslations } from './auth-translations';
+import AuthTranslations from './auth-translations';
 
 export default async function AuthButton() {
   const {

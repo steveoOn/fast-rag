@@ -71,5 +71,99 @@
       "delete": "Delete",
       "embedding": "Document Analysis"
     }
+  },
+  "Platform": {
+    "Sidebar": {
+      "home": "Home",
+      "clientsManagement": "Clients Management",
+      "dataManagement": "Data Management",
+      "resetPassword": "Reset Password"
+    },
+    "Home": {
+      "title": "Getting Started",
+      "subtitle": "Create an account, verify your identity, and connect to our service.",
+      "CreateApiKey": {
+        "title": "Create API Key",
+        "description": "Create and manage your API keys to access our services.",
+        "linkText": "Manage API Keys",
+        "Steps": {
+          "create": "Create a new API key",
+          "switch": "Switch between different API keys",
+          "newClient": "Create a new client",
+          "test": "Test the validity of your API key"
+        }
+      },
+      "DataManagement": {
+        "title": "File Management",
+        "description": "Upload and manage your documents, which will be vectorized for use with LLMs.",
+        "linkText": "Manage Files",
+        "Steps": {
+          "upload": "Upload a new document",
+          "delete": "Delete an existing document",
+          "view": "View a list of uploaded documents",
+          "parse": "Parse a document"
+        }
+      }
+    },
+    "ClientsManagement": {
+      "title": "Clients Management",
+      "subtitle": "Create, manage, and delete your clients and API keys.",
+      "linkText": "Manage Clients",
+      "status": "Status",
+      "apiKey": "API Key",
+      "noApiKey": "No API Key",
+      "createNewApiKey": "New Key",
+      "setActive": "Active",
+      "showApiKey": "Show",
+      "hideApiKey": "Hide",
+      "active": "Active",
+      "inactive": "Inactive",
+      "manageKeys": "Manage",
+      "enterClientName": "Please enter the client name",
+      "clientNamePlaceholder": "Client name, only letters, numbers, and underscores",
+      "Steps": {
+        "create": "Create",
+        "switch": "Switch",
+        "newClient": "New Client"
+      },
+      "clientCreatedDescription": "Client {name} created, and an API Key was created.",
+      "apiKeyCreatedDescription": "API Key created",
+      "apiKeyActivatedDescription": "API Key activated"
+    },
+    "KeyManagement": {
+      "title": "Key Management",
+      "subtitle": "Create, manage, and delete your API keys.",
+      "description": "Description",
+      "noDescription": "Not set",
+      "status": "Status",
+      "token": "Key",
+      "createdAt": "Created At",
+      "createNewToken": "Create New Key",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "backToClients": "Back to Clients",
+      "noTokens": "No tokens created",
+      "Toast": {
+        "tokenCreated": "Token created",
+        "tokenCreatedDescription": "Token created successfully",
+        "tokenCreationFailed": "Token creation failed",
+        "tokenActivationFailed": "Token activation failed",
+        "tokenCopied": "Token copied",
+        "tokenCopiedDescription": "Token copied successfully",
+        "tokenActivated": "Token activated",
+        "tokenActivatedDescription": "Token activated successfully"
+      }
+    }
+  },
+  "Utils": {
+    "CopyButton": {
+      "success": "Copy Success",
+      "error": "Copy Error",
+      "manualCopy": "Please copy manually"
+    },
+    "Error": {
+      "unknown": "Unknown Error"
+    }
   }
 }

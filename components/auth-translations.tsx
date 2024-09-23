@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 
-export function AuthTranslations({
+export default function AuthTranslations({
   children,
   namespace,
 }: {

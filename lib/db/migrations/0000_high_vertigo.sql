@@ -17,8 +17,8 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "access_tokens" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"client_id" varchar(255) NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"client_id" uuid NOT NULL,
 	"token" varchar(255) NOT NULL,
 	"description" text,
 	"status" "access_token_status" DEFAULT 'active' NOT NULL,
@@ -28,26 +28,28 @@ CREATE TABLE IF NOT EXISTS "access_tokens" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "clients" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
-	"api_key" varchar(255) NOT NULL,
-	"status" "client_status" DEFAULT 'pending' NOT NULL,
+	"api_key" varchar(255),
+	"status" "client_status" DEFAULT 'active' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "clients_api_key_unique" UNIQUE("api_key")
+	CONSTRAINT "clients_api_key_unique" UNIQUE("api_key"),
+	CONSTRAINT "clients_name_user_unique" UNIQUE("name","user_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "document_versions" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"document_id" varchar(255) NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"document_id" uuid NOT NULL,
 	"version" integer NOT NULL,
 	"storage_url" varchar(1024),
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "documents" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"client_id" varchar(255) NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"client_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"type" "document_type" NOT NULL,
 	"storage_url" varchar(1024),
@@ -56,15 +58,25 @@ CREATE TABLE IF NOT EXISTS "documents" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "embeddings" (
-	"id" varchar(255) PRIMARY KEY NOT NULL,
-	"document_version_id" varchar(255) NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"document_version_id" uuid NOT NULL,
 	"content" text NOT NULL,
 	"embedding" vector(1536) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "auth"."users" (
+	"id" uuid PRIMARY KEY NOT NULL
+);
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "access_tokens" ADD CONSTRAINT "access_tokens_client_id_clients_id_fk" FOREIGN KEY ("client_id") REFERENCES "public"."clients"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "clients" ADD CONSTRAINT "clients_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
