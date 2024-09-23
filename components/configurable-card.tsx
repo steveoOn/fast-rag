@@ -11,11 +11,13 @@ interface ConfigurableCardProps {
     label: string;
     onClick: () => void;
     icon: LucideIcon;
+    loading?: boolean;
   };
   secondaryAction?: {
     label: string;
     onClick: () => void;
     icon: LucideIcon;
+    loading?: boolean;
   };
 }
 
@@ -44,13 +46,23 @@ export function ConfigurableCard({
           <Button
             onClick={primaryAction.onClick}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            disabled={primaryAction.loading}
           >
             <primaryAction.icon className="mr-2 h-4 w-4" />
             {primaryAction.label}
           </Button>
           {secondaryAction && (
-            <Button onClick={secondaryAction.onClick} variant="outline" className="flex-1">
-              <secondaryAction.icon className="mr-2 h-4 w-4" />
+            <Button
+              onClick={secondaryAction.onClick}
+              variant="outline"
+              className="flex-1"
+              disabled={secondaryAction.loading}
+            >
+              {secondaryAction.loading ? (
+                <div className="animate-spin h-4 w-4 mr-2">🔄</div>
+              ) : (
+                <secondaryAction.icon className="mr-2 h-4 w-4" />
+              )}
               {secondaryAction.label}
             </Button>
           )}

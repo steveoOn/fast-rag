@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { ConfigurableCard } from '@/components/configurable-card';
 import { createClientWithApiKey } from '@/lib/actions/create-client';
 import { createAccessToken } from '@/lib/actions/create-access-token';
-import { setActiveToken } from '@/lib/actions/set-active-token';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
-import { Plus, Key, RefreshCw } from 'lucide-react';
+import { Plus, Key, ArrowRight } from 'lucide-react';
 import MaskedApiKey from '@/components/masked-api-key';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useRouter } from 'next/navigation';
+import ClientDialog from '@/components/modules/client-dialog';
 
 type Client = {
   id: string;
@@ -28,8 +28,11 @@ export default function ClientsList({
 }) {
   const [clients, setClients] = useState<Client[]>(initialClients);
   const [isCreatingClient, setIsCreatingClient] = useState(false);
+  const [loadingClientId, setLoadingClientId] = useState<string | null>(null);
   const { toast } = useToast();
   const t = useTranslations('Platform.ClientsManagement');
+  const tUtils = useTranslations('Utils.Error');
+  const router = useRouter();
 
   const handleCreateClient = async (clientName: string) => {
     setIsCreatingClient(true);
@@ -50,7 +53,7 @@ export default function ClientsList({
       } else {
         toast({
           title: t('Steps.create'),
-          description: t('unknownError'),
+          description: tUtils('unknown'),
           variant: 'destructive',
         });
       }
@@ -60,6 +63,7 @@ export default function ClientsList({
   };
 
   const handleCreateApiKey = async (clientId: string, description?: string) => {
+    setLoadingClientId(clientId);
     try {
       const newToken = await createAccessToken(clientId, description);
       setClients(
@@ -81,47 +85,22 @@ export default function ClientsList({
       } else {
         toast({
           title: t('Steps.create'),
-          description: t('unknownError'),
+          description: tUtils('unknown'),
           variant: 'destructive',
         });
       }
+    } finally {
+      setLoadingClientId(null);
     }
   };
 
-  const handleSetActiveToken = async (clientId: string, tokenId: string) => {
-    try {
-      await setActiveToken(clientId, tokenId);
-      toast({
-        title: t('Steps.switch'),
-        description: t('apiKeyActivatedDescription'),
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast({
-          title: t('Steps.switch'),
-          description: error.message,
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title: t('Steps.switch'),
-          description: '未知错误',
-          variant: 'destructive',
-        });
-      }
-    }
+  const handleManageKeys = (clientId: string) => {
+    router.push(`/platform/clients-management/keys/${clientId}`);
   };
 
   return (
     <div className="space-y-8">
-      <Button
-        onClick={() => handleCreateClient('新客户端')}
-        disabled={isCreatingClient}
-        className="bg-blue-600 hover:bg-blue-700 text-white"
-      >
-        <Plus className="mr-2 h-4 w-4" />
-        {t('Steps.create')}
-      </Button>
+      <ClientDialog onSubmit={handleCreateClient} isSubmitting={isCreatingClient} />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {clients.map((client) => (
           <ConfigurableCard
@@ -153,16 +132,13 @@ export default function ClientsList({
               label: t('createNewApiKey'),
               onClick: () => handleCreateApiKey(client.id),
               icon: Plus,
+              loading: loadingClientId === client.id,
             }}
-            secondaryAction={
-              client.api_key
-                ? {
-                    label: t('setActive'),
-                    onClick: () => handleSetActiveToken(client.id, client.api_key!),
-                    icon: RefreshCw,
-                  }
-                : undefined
-            }
+            secondaryAction={{
+              label: t('manageKeys'),
+              onClick: () => handleManageKeys(client.id),
+              icon: ArrowRight,
+            }}
           />
         ))}
       </div>

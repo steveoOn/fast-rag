@@ -116,17 +116,44 @@
       "setActive": "激活",
       "showApiKey": "显示",
       "hideApiKey": "隐藏",
-      "unknownError": "未知错误",
       "active": "已激活",
       "inactive": "未激活",
+      "manageKeys": "管理密钥",
+      "enterClientName": "请输入客户端名称",
+      "clientNamePlaceholder": "客户端名称，仅支持字母、数字和下划线",
       "Steps": {
         "create": "创建",
         "switch": "切换",
         "newClient": "新客户端"
       },
-      "clientCreatedDescription": "客户端 {name} 已创建",
+      "clientCreatedDescription": "客户端 {name} 已创建，同时创建了一个 API Key",
       "apiKeyCreatedDescription": "API Key 已创建",
       "apiKeyActivatedDescription": "API Key 已激活"
+    },
+    "KeyManagement": {
+      "title": "密钥管理",
+      "subtitle": "创建、管理和删除你的 API 密钥。",
+      "description": "描述",
+      "noDescription": "未设置",
+      "status": "状态",
+      "token": "密钥",
+      "createdAt": "创建时间",
+      "createNewToken": "创建新密钥",
+      "active": "已激活",
+      "inactive": "未激活",
+      "activate": "激活",
+      "backToClients": "返回客户端",
+      "noTokens": "未创建任何密钥",
+      "Toast": {
+        "tokenCreated": "密钥已创建",
+        "tokenCreatedDescription": "密钥已成功创建",
+        "tokenCreationFailed": "密钥创建失败",
+        "tokenActivationFailed": "密钥激活失败",
+        "tokenCopied": "密钥已复制",
+        "tokenCopiedDescription": "密钥已成功复制到剪贴板",
+        "tokenActivated": "密钥已激活",
+        "tokenActivatedDescription": "密钥已成功激活"
+      }
     }
   },
   "Utils": {
@@ -134,6 +161,9 @@
       "success": "复制成功",
       "error": "复制错误",
       "manualCopy": "请手动复制内容"
+    },
+    "Error": {
+      "unknown": "未知错误"
     }
   }
 }

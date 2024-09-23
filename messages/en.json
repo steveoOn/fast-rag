@@ -112,21 +112,48 @@
       "status": "Status",
       "apiKey": "API Key",
       "noApiKey": "No API Key",
-      "createNewApiKey": "Create New Key",
+      "createNewApiKey": "New Key",
       "setActive": "Active",
       "showApiKey": "Show",
       "hideApiKey": "Hide",
-      "unknownError": "Unknown Error",
       "active": "Active",
       "inactive": "Inactive",
+      "manageKeys": "Manage",
+      "enterClientName": "Please enter the client name",
+      "clientNamePlaceholder": "Client name, only letters, numbers, and underscores",
       "Steps": {
         "create": "Create",
         "switch": "Switch",
         "newClient": "New Client"
       },
-      "clientCreatedDescription": "Client {name} created",
+      "clientCreatedDescription": "Client {name} created, and an API Key was created.",
       "apiKeyCreatedDescription": "API Key created",
       "apiKeyActivatedDescription": "API Key activated"
+    },
+    "KeyManagement": {
+      "title": "Key Management",
+      "subtitle": "Create, manage, and delete your API keys.",
+      "description": "Description",
+      "noDescription": "Not set",
+      "status": "Status",
+      "token": "Key",
+      "createdAt": "Created At",
+      "createNewToken": "Create New Key",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "backToClients": "Back to Clients",
+      "noTokens": "No tokens created",
+      "Toast": {
+        "tokenCreated": "Token created",
+        "tokenCreatedDescription": "Token created successfully",
+        "tokenCreationFailed": "Token creation failed",
+        "tokenActivationFailed": "Token activation failed",
+        "tokenCopied": "Token copied",
+        "tokenCopiedDescription": "Token copied successfully",
+        "tokenActivated": "Token activated",
+        "tokenActivatedDescription": "Token activated successfully"
+      }
     }
   },
   "Utils": {
@@ -134,6 +161,9 @@
       "success": "Copy Success",
       "error": "Copy Error",
       "manualCopy": "Please copy manually"
+    },
+    "Error": {
+      "unknown": "Unknown Error"
     }
   }
 }
