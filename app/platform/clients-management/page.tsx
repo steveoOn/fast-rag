@@ -2,6 +2,7 @@ import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { getUserClients } from '@/lib/actions/get-user-clients';
 import ClientsList from '@/components/modules/clients-list';
+import TranslationWrapper from '@/components/auth-translations';
 
 export default async function ClientsManagementPage() {
   const supabase = createClient();
@@ -17,9 +18,18 @@ export default async function ClientsManagementPage() {
   const clients = await getUserClients(user.id);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">客户端管理</h1>
-      <ClientsList initialClients={clients} userId={user.id} />
-    </div>
+    <TranslationWrapper namespace="Platform.ClientsManagement">
+      {(t) => (
+        <div className="max-w-6xl mx-auto px-4 py-12">
+          <div className="mb-12">
+            <h1 className="text-4xl font-bold text-blue-900 mb-4 dark:text-blue-300">
+              {t('title')}
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400">{t('subtitle')}</p>
+          </div>
+          <ClientsList initialClients={clients} userId={user.id} />
+        </div>
+      )}
+    </TranslationWrapper>
   );
 }

@@ -107,8 +107,18 @@
     },
     "ClientsManagement": {
       "title": "客户端管理",
-      "description": "创建、管理和删除你的客户端。",
+      "subtitle": "创建、管理和删除你的客户端以及 API 密钥。",
       "linkText": "管理客户端",
+      "status": "状态",
+      "apiKey": "API 密钥",
+      "noApiKey": "未创建",
+      "createNewApiKey": "创建新密钥",
+      "setActive": "激活",
+      "showApiKey": "显示",
+      "hideApiKey": "隐藏",
+      "unknownError": "未知错误",
+      "active": "已激活",
+      "inactive": "未激活",
       "Steps": {
         "create": "创建",
         "switch": "切换",
@@ -117,6 +127,13 @@
       "clientCreatedDescription": "客户端 {name} 已创建",
       "apiKeyCreatedDescription": "API Key 已创建",
       "apiKeyActivatedDescription": "API Key 已激活"
+    }
+  },
+  "Utils": {
+    "CopyButton": {
+      "success": "复制成功",
+      "error": "复制错误",
+      "manualCopy": "请手动复制内容"
     }
   }
 }

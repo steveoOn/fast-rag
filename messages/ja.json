@@ -107,8 +107,18 @@
     },
     "ClientsManagement": {
       "title": "クライアント管理",
-      "description": "クライアントを作成、管理、削除します。",
+      "subtitle": "クライアントを作成、管理、削除します。",
       "linkText": "クライアントの管理",
+      "status": "ステータス",
+      "apiKey": "API Key",
+      "noApiKey": "API Key なし",
+      "createNewApiKey": "新しいキーを作成",
+      "setActive": "有効",
+      "showApiKey": "表示",
+      "hideApiKey": "非表示",
+      "unknownError": "未知のエラー",
+      "active": "有効",
+      "inactive": "無効",
       "Steps": {
         "create": "作成",
         "switch": "切り替え",
@@ -117,6 +127,13 @@
       "clientCreatedDescription": "クライアント {name} が作成されました",
       "apiKeyCreatedDescription": "API Key が作成されました",
       "apiKeyActivatedDescription": "API Key が有効になりました"
+    }
+  },
+  "Utils": {
+    "CopyButton": {
+      "success": "コピー成功",
+      "error": "コピーエラー",
+      "manualCopy": "手動でコピーしてください"
     }
   }
 }

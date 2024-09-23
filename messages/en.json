@@ -107,8 +107,18 @@
     },
     "ClientsManagement": {
       "title": "Clients Management",
-      "description": "Create, manage, and delete your clients.",
+      "subtitle": "Create, manage, and delete your clients and API keys.",
       "linkText": "Manage Clients",
+      "status": "Status",
+      "apiKey": "API Key",
+      "noApiKey": "No API Key",
+      "createNewApiKey": "Create New Key",
+      "setActive": "Active",
+      "showApiKey": "Show",
+      "hideApiKey": "Hide",
+      "unknownError": "Unknown Error",
+      "active": "Active",
+      "inactive": "Inactive",
       "Steps": {
         "create": "Create",
         "switch": "Switch",
@@ -117,6 +127,13 @@
       "clientCreatedDescription": "Client {name} created",
       "apiKeyCreatedDescription": "API Key created",
       "apiKeyActivatedDescription": "API Key activated"
+    }
+  },
+  "Utils": {
+    "CopyButton": {
+      "success": "Copy Success",
+      "error": "Copy Error",
+      "manualCopy": "Please copy manually"
     }
   }
 }

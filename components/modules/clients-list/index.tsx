@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { ConfigurableCard } from '@/components/configurable-card';
 import { createClientWithApiKey } from '@/lib/actions/create-client';
 import { createAccessToken } from '@/lib/actions/create-access-token';
 import { setActiveToken } from '@/lib/actions/set-active-token';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
+import { Plus, Key, RefreshCw } from 'lucide-react';
+import MaskedApiKey from '@/components/masked-api-key';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 type Client = {
   id: string;
@@ -47,7 +50,7 @@ export default function ClientsList({
       } else {
         toast({
           title: t('Steps.create'),
-          description: '未知错误',
+          description: t('unknownError'),
           variant: 'destructive',
         });
       }
@@ -78,7 +81,7 @@ export default function ClientsList({
       } else {
         toast({
           title: t('Steps.create'),
-          description: '未知错误',
+          description: t('unknownError'),
           variant: 'destructive',
         });
       }
@@ -110,43 +113,59 @@ export default function ClientsList({
   };
 
   return (
-    <>
-      <Button onClick={() => handleCreateClient('新客户端')} disabled={isCreatingClient}>
+    <div className="space-y-8">
+      <Button
+        onClick={() => handleCreateClient('新客户端')}
+        disabled={isCreatingClient}
+        className="bg-blue-600 hover:bg-blue-700 text-white"
+      >
+        <Plus className="mr-2 h-4 w-4" />
         {t('Steps.create')}
       </Button>
-      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {clients.map((client) => (
-          <ClientCard
+          <ConfigurableCard
             key={client.id}
-            client={client}
-            onCreateApiKey={handleCreateApiKey}
-            onSetActiveToken={handleSetActiveToken}
+            icon={Key}
+            title={client.name}
+            content={
+              <>
+                <p className="text-gray-600 dark:text-gray-400 mb-2">
+                  {t('status')}:{' '}
+                  <span
+                    className={`font-semibold ${client.status === 'active' ? 'text-green-500' : 'text-gray-400'}`}
+                  >
+                    {client.status === 'active' ? t('active') : t('inactive')}
+                  </span>
+                </p>
+                <div className="text-gray-600 dark:text-gray-400">
+                  <div className="mb-1">{t('apiKey')}:</div>
+                  <ScrollArea className="w-full h-10 relative pr-20">
+                    <div className="w-full h-10 flex items-center">
+                      <MaskedApiKey apiKey={client.api_key} />
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+                </div>
+              </>
+            }
+            primaryAction={{
+              label: t('createNewApiKey'),
+              onClick: () => handleCreateApiKey(client.id),
+              icon: Plus,
+            }}
+            secondaryAction={
+              client.api_key
+                ? {
+                    label: t('setActive'),
+                    onClick: () => handleSetActiveToken(client.id, client.api_key!),
+                    icon: RefreshCw,
+                  }
+                : undefined
+            }
           />
         ))}
       </div>
-    </>
-  );
-}
-
-function ClientCard({
-  client,
-  onCreateApiKey,
-  onSetActiveToken,
-}: {
-  client: Client;
-  onCreateApiKey: (clientId: string, description?: string) => void;
-  onSetActiveToken: (clientId: string, tokenId: string) => void;
-}) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{client.name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p>状态: {client.status}</p>
-        <p>API Key: {client.api_key}</p>
-        <Button onClick={() => onCreateApiKey(client.id)}>创建新 API Key</Button>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
