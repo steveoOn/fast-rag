@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { embeddings } from '@/lib/db/schema/schema';
 import { handleError, logger } from '@/lib/utils';
 import { loadFile, readFile, embedding } from '@/lib/actions';
-import { EmbedData } from '@/types';
+import { EmbedData, CustomError } from '@/types';
 
 export async function POST(request: Request) {
   try {
@@ -16,7 +16,9 @@ export async function POST(request: Request) {
      * false: 跳过已生成过向量的文件
      */
     const { files, force } = body;
-    if (!files?.length) return NextResponse.json(body, { status: 201 });
+    if (!files?.length) {
+      throw new CustomError('请正确选择文件上传', 'UPLOAD_FILES_ERROR');
+    }
 
     const versionIds: string[] = [];
     const allPromise = files.map(async (fileId: string) => {

@@ -11,11 +11,20 @@ export function chunkDocumentByParagraph(
   text: string,
   { chunkOverlap, chunkSize }: ChunkOptions
 ): Chunk[] {
-  // 按段落分割文本
   const paragraphs: Array<Paragraph> = text.split(/\n\s*\n/).reduce((acc, paragraph, index) => {
-    const start = index === 0 ? 0 : acc[index - 1].end + 2;
+    if (!paragraph.trim()) return acc;
+
     const size = paragraph.length;
-    if (paragraph.trim()) {
+    const lastParagraph = acc[acc.length - 1];
+
+    if (lastParagraph && lastParagraph.size + size + 2 <= chunkSize) {
+      // 合并短段落
+      lastParagraph.content += '\n\n' + paragraph;
+      lastParagraph.size += size + 2;
+      lastParagraph.end += size + 2;
+    } else {
+      // 添加新段落
+      const start = lastParagraph ? lastParagraph.end + 2 : 0;
       acc.push({
         content: paragraph,
         size,
@@ -26,39 +35,25 @@ export function chunkDocumentByParagraph(
     return acc;
   }, [] as Paragraph[]);
 
-  const chunks: Chunk[] = [];
+  return paragraphs.map((paragraph, i) => {
+    const prevParagraph = paragraphs[i - 1];
+    const nextParagraph = paragraphs[i + 1];
 
-  for (let i = 0; i < paragraphs.length; i++) {
-    const paragraph = paragraphs[i];
-    let chunkContent = paragraph.content;
-    let metadata = {
-      start: paragraph.start,
-      end: paragraph.end,
-      size: paragraph.size,
+    const overlapStart = Math.max((prevParagraph?.size ?? 0) - chunkOverlap, 0);
+    const prevOverlap = prevParagraph?.content.slice(overlapStart) ?? '';
+
+    const nextOverlap =
+      nextParagraph?.content.slice(0, Math.min(chunkOverlap, nextParagraph.size ?? 0)) ?? '';
+
+    const chunkContent = [prevOverlap, paragraph.content, nextOverlap].filter(Boolean).join('\n\n');
+
+    return {
+      content: chunkContent,
+      metadata: {
+        start: prevParagraph ? prevParagraph.start + overlapStart : paragraph.start,
+        end: nextParagraph ? nextParagraph.start + nextOverlap.length : paragraph.end,
+        size: paragraph.size,
+      },
     };
-
-    // 滑动窗口 前
-    if (i > 0) {
-      const prevParagraph = paragraphs[i - 1];
-      const overlapStart = Math.max(prevParagraph.size - chunkOverlap, 0);
-      const prevOverlap = prevParagraph.content.slice(overlapStart);
-      chunkContent = prevOverlap + '\n\n' + chunkContent;
-      metadata.start = prevParagraph.start + overlapStart;
-    }
-
-    // 滑动窗口 后
-    if (i < paragraphs.length - 1) {
-      const nextParagraph = paragraphs[i + 1];
-      const nextOverlap = nextParagraph.content.slice(
-        0,
-        Math.min(chunkOverlap, nextParagraph.size)
-      );
-      chunkContent += '\n\n' + nextOverlap;
-      metadata.end = nextParagraph.start + nextOverlap.length;
-    }
-
-    chunks.push({ content: chunkContent, metadata });
-  }
-
-  return chunks;
+  });
 }
