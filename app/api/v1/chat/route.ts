@@ -21,15 +21,8 @@ export async function POST(request: Request) {
     if (!messages.length) return NextResponse.json({ data: 'no messages' }, { status: 201 });
     const question = messages[0].content as string;
 
-    // const queryRes = await queryEmbeddings(question);
-
     const queryRes = await generateText({
-      system:
-        system ||
-        `你是一个乐于助人的助手。
-        在回答任何问题之前，请先检查你的知识库。
-        只使用工具调用中的信息来回答问题。
-        如果在工具调用中没有找到相关信息，请回答“对不起，我不知道。”`,
+      system: system || `在回答任何问题之前，请先检查你的知识库。`,
       model,
       messages,
       tools: {
@@ -47,18 +40,24 @@ export async function POST(request: Request) {
       },
     });
 
-    const systemPrompt = `
+    const toolRes = queryRes.toolResults[0];
+
+    const questionPrompt = `
               用户的问题：${question};
-              用户的问题总结：${content};
-              知识库中检索到的数据：${queryRes}
+              知识库中检索到的数据：${toolRes.result}
             `;
     const answer = await streamText({
-      system: systemPrompt,
+      system: `
+      你是一个乐于助人的助手，检索你的知识库并回答用户的问题，规则如下：
+      1、你需要根据知识库中检索到的数据来回答用户的问题。
+      2、检索到的数据可能有多条，选择最符合问题的一条来回答，并把选中的这一条数据使用markdown的格式附在答案的最后。
+      3、如果没有在知识库中检索到的数据，则回答用户"对不起，在知识库中并未检索到相应的数据。"
+      `,
       model,
       messages: [
         {
           role: 'user',
-          content: systemPrompt,
+          content: questionPrompt,
         },
       ],
     });
