@@ -1,34 +1,16 @@
 import { NextResponse } from 'next/server';
-import { streamText, convertToCoreMessages, tool } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { embedding } from '@/lib/actions';
-// import { createOllama } from 'ollama-ai-provider';
+import { streamText, convertToCoreMessages, tool, generateText } from 'ai';
 import { z } from 'zod';
-// import OpenAI from 'openai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { queryEmbeddings } from '@/lib/actions';
 import { handleError } from '@/lib/utils';
-
-// const ollama = createOllama({
-//   baseURL: 'https://api13b.bitewise.cc/api',
-// });
-
-// const model = ollama.languageModel('qwen2');
-
-// const getOpenAI = () => {
-//   return createOpenAI({
-//     baseURL: 'https://api/ohmygpt.com/v1',
-//     apiKey: process.env.OPENAI_API_KEY,
-//     compatibility: 'strict',
-//   });
-// };
-
-// const openai = getOpenAI();
 
 const openai = createOpenAI({
   baseURL: 'https://api.ohmygpt.com/v1/',
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const model = openai.languageModel('gpt-4o-mini');
+const model = openai.languageModel('gpt-4o-2024-08-06');
 
 export async function POST(request: Request) {
   try {
@@ -37,29 +19,51 @@ export async function POST(request: Request) {
     const messages = convertToCoreMessages(content);
 
     if (!messages.length) return NextResponse.json({ data: 'no messages' }, { status: 201 });
-    const question = messages[0].content;
+    const question = messages[0].content as string;
 
-    const result = await streamText({
+    // const queryRes = await queryEmbeddings(question);
+
+    const queryRes = await generateText({
       system:
         system ||
-        `你是一个乐于助人的助手。在回答任何问题之前，请先检查你的知识库。
-    只使用工具调用中的信息来回答问题。回答用户前先执行test1再执行test2，test2的参数是test1的返回值。`,
+        `你是一个乐于助人的助手。
+        在回答任何问题之前，请先检查你的知识库。
+        只使用工具调用中的信息来回答问题。
+        如果在工具调用中没有找到相关信息，请回答“对不起，我不知道。”`,
       model,
       messages,
       tools: {
-        test1: tool({
-          description: `在答案前添加*******`,
+        getInformation: tool({
+          description: `从知识库中查询数据用以回答用户的问题`,
           parameters: z.object({
-            content: z.string().describe('执行test1'),
+            content: z.string().describe('用户的问题'),
           }),
           execute: async ({ content }) => {
-            return `******${content}`;
+            const queryRes = await queryEmbeddings(content);
+
+            return queryRes;
           },
         }),
       },
     });
 
-    return result.toDataStreamResponse();
+    const systemPrompt = `
+              用户的问题：${question};
+              用户的问题总结：${content};
+              知识库中检索到的数据：${queryRes}
+            `;
+    const answer = await streamText({
+      system: systemPrompt,
+      model,
+      messages: [
+        {
+          role: 'user',
+          content: systemPrompt,
+        },
+      ],
+    });
+
+    return answer.toDataStreamResponse();
   } catch (error) {
     const { message, code, details } = handleError(error);
     const status =
