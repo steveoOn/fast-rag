@@ -45,6 +45,7 @@ export async function POST(request: Request) {
 
     const allEmbedRes = await Promise.allSettled(allPromise);
 
+    // 过滤成功的数据
     const embedData = allEmbedRes.reduce<EmbedData[]>((acc, result) => {
       if (result.status === 'fulfilled' && result.value) {
         return [...acc, ...result.value];
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
     }
 
     if (force) {
+      // 删除向量库中的数据
       await db.delete(embeddings).where(inArray(embeddings.document_version_id, versionIds));
     }
 
