@@ -70,6 +70,9 @@
     "Operation": {
       "delete": "削除",
       "embedding": "文書解析"
+    },
+    "Messages": {
+      "selectFiles": "ファイルを選択してください"
     }
   },
   "Platform": {

@@ -1,3 +1,4 @@
+import { SupportedLocale } from '@/constant';
 import en from '@/messages/en.json';
 import zh from '@/messages/zh.json';
 import ja from '@/messages/ja.json';
@@ -15,4 +16,13 @@ export function getTranslation(locale: string, key: string): string {
     }
   }
   return typeof result === 'string' ? result : key;
+}
+
+export function t(message: string) {
+  const locale = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('NEXT_LOCALE='))
+    ?.split('=')[1] as SupportedLocale;
+
+  return getTranslation(locale, message);
 }

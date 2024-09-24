@@ -70,6 +70,9 @@
     "Operation": {
       "delete": "Delete",
       "embedding": "Document Analysis"
+    },
+    "Messages": {
+      "selectFiles": "Please select files"
     }
   },
   "Platform": {

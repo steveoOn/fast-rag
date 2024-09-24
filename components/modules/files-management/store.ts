@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import api from '@/lib/request';
 import { FilesManagementStore, TableData } from '@/types';
 import { Table, Row } from '@tanstack/react-table';
+import { toast } from '@/hooks/use-toast';
+import { t } from '@/lib/utils';
 
 const getSelectedFiles = (table: Table<TableData>) => {
   return table.getSelectedRowModel().rows.map((row: Row<TableData>) => row.original.id);
@@ -39,17 +41,33 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     const { table, getTableData } = get();
     if (!table) return;
     const fileIds = getSelectedFiles(table);
-    if (!fileIds?.length) return;
+
+    if (!fileIds?.length) {
+      toast({
+        title: t('FilesManagement.Messages.selectFiles'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     await api.post('/files-management/delete', { fileIds });
     getTableData();
   },
   embed: async () => {
     const { table, getTableData } = get();
     if (!table) return;
-    const files = getSelectedFiles(table);
-    if (!files?.length) return;
+    const fileIds = getSelectedFiles(table);
+
+    if (!fileIds?.length) {
+      toast({
+        title: t('FilesManagement.Messages.selectFiles'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     await api.post('/doc-process/embedding', {
-      files,
+      fileIds,
       force: true,
     });
     getTableData();
