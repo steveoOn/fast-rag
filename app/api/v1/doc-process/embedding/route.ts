@@ -8,20 +8,20 @@ import { EmbedData, CustomError } from '@/types';
 
 export async function POST(request: Request) {
   try {
-    const body: { files: string[]; force?: boolean } = await request.json();
+    const body: { fileIds: string[]; force?: boolean } = await request.json();
     logger.info(`embedding body: ${JSON.stringify(body)}`);
     /**
      * force
      * true: 对所选文件重新生成向量
      * false: 跳过已生成过向量的文件
      */
-    const { files, force } = body;
-    if (!files?.length) {
+    const { fileIds, force } = body;
+    if (!fileIds?.length) {
       throw new CustomError('请正确选择文件上传', 'UPLOAD_FILES_ERROR');
     }
 
     const versionIds: string[] = [];
-    const allPromise = files.map(async (fileId: string) => {
+    const allPromise = fileIds.map(async (fileId: string) => {
       // 下载文档  如果force不为true  则跳过已经embedding 的文件
       const file = await loadFile(fileId, force);
 
@@ -71,6 +71,7 @@ export async function POST(request: Request) {
     return NextResponse.json(body, { status: 201 });
   } catch (error) {
     const { message, code, details } = handleError(error);
+    console.log(message, code, details);
     const status =
       code === 'VALIDATION_ERROR'
         ? 400

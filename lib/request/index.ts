@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { toast } from '@/hooks/use-toast';
 
 interface ApiResponse<T = unknown> {
   data: T;
@@ -43,10 +44,20 @@ class Request {
   }
 
   private formatError(error: AxiosError): ApiResponse<null> {
+    const { response } = error;
+    const errorMsg =
+      (response?.data as { error?: string })?.error || 'An unexpected error occurred';
+    if (errorMsg) {
+      toast({
+        title: errorMsg,
+        description: response?.status || 500,
+        variant: 'destructive',
+      });
+    }
     return {
       data: null,
-      message: error.message || 'An unexpected error occurred',
-      status: error.response?.status || 500,
+      message: errorMsg,
+      status: response?.status || 500,
     };
   }
 
