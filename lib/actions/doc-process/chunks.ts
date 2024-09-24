@@ -7,10 +7,7 @@ import { Chunk, ChunkOptions, Paragraph } from '@/types/doc-process';
  * @param chunkSize 块的大小
  * @returns 包含块的数组
  */
-export function chunkDocumentByParagraph(
-  text: string,
-  { chunkOverlap, chunkSize }: ChunkOptions
-): Chunk[] {
+export function chunkDocumentByParagraph(text: string, { chunkOverlap }: ChunkOptions): Chunk[] {
   // 按段落分割文本
   const paragraphs: Array<Paragraph> = text.split(/\n\s*\n/).reduce((acc, paragraph, index) => {
     const start = index === 0 ? 0 : acc[index - 1].end + 2;
@@ -31,7 +28,7 @@ export function chunkDocumentByParagraph(
   for (let i = 0; i < paragraphs.length; i++) {
     const paragraph = paragraphs[i];
     let chunkContent = paragraph.content;
-    let metadata = {
+    const metadata = {
       start: paragraph.start,
       end: paragraph.end,
       size: paragraph.size,

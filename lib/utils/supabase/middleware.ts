@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { SUPABASE_URL, SUPABASE_PUBLIC_ANON_KEY } from '@/constant';
+import { logger } from '../logger/logger';
 
 /**
  * 更新会话
@@ -51,6 +52,7 @@ export const updateSession = async (request: NextRequest) => {
 
     return response;
   } catch (e) {
+    logger.error(e);
     // If you are here, a Supabase client could not be created!
     // This is likely because you have not set up environment variables.
     // Check out http://localhost:3000 for Next Steps.

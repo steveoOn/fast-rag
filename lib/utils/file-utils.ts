@@ -36,6 +36,6 @@ export function mimeTypeToDocumentType(mimeType: string, fileName: string): Docu
 }
 
 export function sanitizeFileName(fileName: string): string {
-  // 移除非 ASCII 字符，替换空格为下划线
-  return fileName.replace(/[^\x00-\x7F]/g, '').replace(/\s+/g, '_');
+  // 移除非基本拉丁字符，替换空格为下划线
+  return fileName.replace(/[^\u0020-\u007F]/g, '').replace(/\s+/g, '_');
 }

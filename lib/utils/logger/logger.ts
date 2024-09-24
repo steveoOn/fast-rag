@@ -5,6 +5,7 @@ let logger: Logger;
 
 if (process.env.VERCEL) {
   // Vercel 生产环境配置
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { logflarePinoVercel } = require('pino-logflare');
 
   const { stream, send } = logflarePinoVercel({
