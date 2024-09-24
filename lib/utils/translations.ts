@@ -6,10 +6,10 @@ const translations = { en, zh, ja };
 
 export function getTranslation(locale: string, key: string): string {
   const keys = key.split('.');
-  let result: any = translations[locale as keyof typeof translations];
+  let result: unknown = translations[locale as keyof typeof translations];
   for (const k of keys) {
     if (result && typeof result === 'object' && k in result) {
-      result = result[k];
+      result = (result as Record<string, unknown>)[k];
     } else {
       return key; // 如果找不到翻译，返回原始 key
     }

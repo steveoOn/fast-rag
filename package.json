@@ -6,7 +6,7 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx lib/db/migrate.ts",
@@ -76,6 +76,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
     "@vitejs/plugin-react": "^4.3.1",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.24.2",
@@ -94,7 +96,11 @@
     "vitest": "^2.0.5"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write --config .prettierrc"
+    ],
+    "**/*.{json,css,scss,md}": [
       "prettier --write --config .prettierrc"
     ]
   }

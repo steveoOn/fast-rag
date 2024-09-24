@@ -11,7 +11,7 @@ export function chunkDocumentByParagraph(
   text: string,
   { chunkOverlap, chunkSize }: ChunkOptions
 ): Chunk[] {
-  const paragraphs: Array<Paragraph> = text.split(/\n\s*\n/).reduce((acc, paragraph, index) => {
+  const paragraphs: Array<Paragraph> = text.split(/\n\s*\n/).reduce((acc, paragraph) => {
     if (!paragraph.trim()) return acc;
 
     const size = paragraph.length;

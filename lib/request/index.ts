@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-interface ApiResponse<T = any> {
+interface ApiResponse<T = unknown> {
   data: T;
   message: string;
   status: number;
@@ -26,9 +26,11 @@ class Request {
 
     // response 预处理
     this.instance.interceptors.response.use(
-      // @ts-ignore
-      (response) => this.formatResponse(response),
-      (error) => Promise.reject(this.formatError(error))
+      (response: AxiosResponse) => {
+        const formattedResponse = this.formatResponse(response);
+        return { ...response, data: formattedResponse };
+      },
+      (error: AxiosError) => Promise.reject(this.formatError(error))
     );
   }
 
@@ -40,7 +42,7 @@ class Request {
     };
   }
 
-  private formatError(error: AxiosError): ApiResponse {
+  private formatError(error: AxiosError): ApiResponse<null> {
     return {
       data: null,
       message: error.message || 'An unexpected error occurred',
@@ -48,23 +50,25 @@ class Request {
     };
   }
 
-  public get = <T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> =>
-    this.instance.get(url, config);
+  public get = <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> =>
+    this.instance.get(url, config).then((response) => response.data);
 
-  public post = <T = any>(
+  public post = <T = unknown>(
     url: string,
-    data?: any,
+    data?: unknown,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> => this.instance.post(url, data, config);
+  ): Promise<ApiResponse<T>> =>
+    this.instance.post(url, data, config).then((response) => response.data);
 
-  public put = <T = any>(
+  public put = <T = unknown>(
     url: string,
-    data?: any,
+    data?: unknown,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> => this.instance.put(url, data, config);
+  ): Promise<ApiResponse<T>> =>
+    this.instance.put(url, data, config).then((response) => response.data);
 
-  public del = <T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> =>
-    this.instance.delete(url, config);
+  public del = <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> =>
+    this.instance.delete(url, config).then((response) => response.data);
 }
 
 const api = new Request('/api/v1');
