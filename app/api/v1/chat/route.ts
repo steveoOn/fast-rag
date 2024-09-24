@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { streamText, convertToCoreMessages, tool, generateText } from 'ai';
+import { streamText, convertToCoreMessages, tool } from 'ai';
 import { z } from 'zod';
 import { createOpenAI } from '@ai-sdk/openai';
 import { queryEmbeddings } from '@/lib/actions';
@@ -21,47 +21,28 @@ export async function POST(request: Request) {
     if (!messages.length) {
       throw new CustomError('请正确提问', 'QUESTION_ERROR');
     }
-    const question = messages[0].content as string;
 
-    const queryRes = await generateText({
-      system: `在回答任何问题之前，请先检查你的知识库。`,
+    const answer = await streamText({
+      system: `You are a helpful assistant. Check your knowledge base before answering any questions.
+      Only respond to questions using information from tool calls.
+      If no relevant information is found in the tool calls, respond, "Sorry, I don't know."`,
       model,
-      messages,
+      messages: messages,
       tools: {
         getInformation: tool({
-          description: `从知识库中查询数据用以回答用户的问题`,
+          description: `Retrieve relevant information from the knowledge base based on the user's input.`,
           parameters: z.object({
-            content: z.string().describe('用户的问题'),
+            content: z.string().describe("The user's question or input"),
           }),
           execute: async ({ content }) => {
+            console.log('content', content);
             const queryRes = await queryEmbeddings(content);
-
+            console.log('queryRes', queryRes);
             return queryRes;
           },
         }),
       },
-    });
-
-    const toolRes = queryRes.toolResults[0];
-
-    const questionPrompt = `
-              用户的问题：${question};
-              知识库中检索到的数据：${toolRes.result}
-            `;
-    const answer = await streamText({
-      system: `
-      你是一个乐于助人的助手，检索你的知识库并回答用户的问题，规则如下：
-      1、你需要根据知识库中检索到的数据来回答用户的问题。
-      2、检索到的数据可能有多条，选择最符合问题的一条来回答，并把选中的这一条数据使用markdown的格式附在答案的最后。
-      3、如果没有在知识库中检索到的数据，则回答用户"对不起，在知识库中并未检索到相应的数据。"
-      `,
-      model,
-      messages: [
-        {
-          role: 'user',
-          content: questionPrompt,
-        },
-      ],
+      maxToolRoundtrips: 2,
     });
 
     return answer.toDataStreamResponse();
