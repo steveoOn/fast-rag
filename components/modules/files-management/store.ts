@@ -32,9 +32,8 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     }
   },
   getTableData: async () => {
-    const response = await api.get('/files-management/list');
-    const { data } = response;
-    set({ tableData: data || [] });
+    const response = await api.get<TableData[]>('/files-management/list');
+    set({ tableData: response.data || [] });
   },
   deleteFiles: async () => {
     const { table, getTableData } = get();
