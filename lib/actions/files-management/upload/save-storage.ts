@@ -23,7 +23,6 @@ async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<Fi
   const sanitizedFileName = sanitizeFileName(file.name);
   const path = `${nanoid()}-${sanitizedFileName}`;
 
-  // 创建 Readable 流
   const fileStream = Readable.from(Buffer.from(file.buffer));
 
   return new Promise((resolve, reject) => {
@@ -44,11 +43,12 @@ async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<Fi
         filename: sanitizedFileName,
         ...(file.metadata && { customMetadata: JSON.stringify(file.metadata) }),
       },
-      chunkSize: 6 * 1024 * 1024, // 6MB
-      uploadSize: file.size, // 明确指定文件大小
+      chunkSize: 6 * 1024 * 1024,
+      uploadSize: file.size,
       onError: (error) => {
         handleError(error);
         reject(error);
+        cleanup();
       },
       onProgress: (bytesUploaded, bytesTotal) => {
         const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
@@ -66,10 +66,16 @@ async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<Fi
           extension: file.extension,
           uploadURL: urlData.publicUrl,
         });
+        cleanup();
       },
     });
 
     upload.start();
+
+    function cleanup() {
+      upload.abort();
+      fileStream.destroy();
+    }
   });
 }
 

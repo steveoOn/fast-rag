@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { toast } from '@/hooks/use-toast';
+import { getUserActiveKey } from '@/lib/actions/get-user-active-key';
 
 interface ApiResponse<T = unknown> {
   data: T;
@@ -17,8 +18,14 @@ class Request {
 
   private setupInterceptors() {
     // 添加token
-    this.instance.interceptors.request.use((config) => {
-      const token = sessionStorage.getItem('token');
+    this.instance.interceptors.request.use(async (config) => {
+      let token = sessionStorage.getItem('token');
+      if (!token) {
+        token = await getUserActiveKey();
+        if (token) {
+          sessionStorage.setItem('token', token);
+        }
+      }
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       }

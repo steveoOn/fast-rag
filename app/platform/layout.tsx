@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Menu, Users, Key, FileText, Home } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Suspense } from 'react';
+import Loading from '@/components/loading';
 
 function Sidebar() {
   const t = useTranslations('Platform.Sidebar');
@@ -54,7 +56,9 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
       <aside className="hidden md:block w-64 bg-white border-r border-gray-200 dark:bg-gray-950 dark:border-gray-800">
         <Sidebar />
       </aside>
-      <main className="flex-1 p-6 overflow-auto bg-white dark:bg-gray-950">{children}</main>
+      <main className="flex-1 p-6 overflow-auto bg-white dark:bg-gray-950">
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </main>
     </div>
   );
 }
