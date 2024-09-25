@@ -3,7 +3,7 @@ import { streamText, convertToCoreMessages, tool } from 'ai';
 import { z } from 'zod';
 import { createOpenAI } from '@ai-sdk/openai';
 import { queryEmbeddings } from '@/lib/actions';
-import { handleError } from '@/lib/utils';
+import { handleError, extractApiKey, validateClient } from '@/lib/utils';
 import { CustomError } from '@/types';
 
 const openai = createOpenAI({
@@ -15,7 +15,14 @@ const model = openai.languageModel('gpt-4o-2024-08-06');
 
 export async function POST(request: Request) {
   try {
+    const apiKey = extractApiKey(request);
+    const client = await validateClient(apiKey);
+    if (!client) {
+      throw new CustomError('非法请求', 'UN_AUTH_REQUEST');
+    }
+
     const body = await request.json();
+    const { docs, docVersions } = body;
     const messages = convertToCoreMessages(body.messages);
 
     if (!messages.length) {
@@ -36,7 +43,12 @@ export async function POST(request: Request) {
           }),
           execute: async ({ content }) => {
             console.log('content', content);
-            const queryRes = await queryEmbeddings(content);
+            const queryRes = await queryEmbeddings({
+              question: content,
+              clientId: client.id,
+              docs,
+              docVersions,
+            });
             console.log('queryRes', queryRes);
             return queryRes;
           },
