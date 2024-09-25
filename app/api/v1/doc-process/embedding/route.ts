@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { inArray } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { embeddings } from '@/lib/db/schema/schema';
-import { handleError, logger } from '@/lib/utils';
+import { handleError, logger, extractApiKey, validateClient } from '@/lib/utils';
 import { loadFile, readFile, embedding } from '@/lib/actions';
 import { EmbedData, CustomError } from '@/types';
 
@@ -20,10 +20,16 @@ export async function POST(request: Request) {
       throw new CustomError('请正确选择文件上传', 'UPLOAD_FILES_ERROR');
     }
 
+    const apiKey = extractApiKey(request);
+    const client = await validateClient(apiKey);
+    if (!client) {
+      throw new CustomError('非法请求', 'UN_AUTH_REQUEST');
+    }
+
     const versionIds: string[] = [];
     const allPromise = fileIds.map(async (fileId: string) => {
       // 下载文档  如果force不为true  则跳过已经embedding 的文件
-      const file = await loadFile(fileId, force);
+      const file = await loadFile({ fileId, force, clientId: client.id });
 
       if (!file) return null;
 
