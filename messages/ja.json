@@ -68,8 +68,12 @@
       "createAt": "アップロード日時"
     },
     "Operation": {
+      "title": "操作",
       "delete": "削除",
-      "embedding": "文書解析"
+      "batchEmbedding": "文書の一括解析",
+      "uploadNewVersion": "新バージョンをアップロード",
+      "embeddingCurrentDoc": "現在のバージョンを解析",
+      "viewVersions": "バージョン履歴を表示"
     },
     "Messages": {
       "selectFiles": "ファイルを選択してください"

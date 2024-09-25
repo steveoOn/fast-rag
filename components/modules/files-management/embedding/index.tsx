@@ -6,5 +6,5 @@ export default function Embedding() {
   const t = useTranslations('FilesManagement');
   const { embed } = useFilesManagementStore();
 
-  return <Button onClick={embed}>{t('Operation.embedding')}</Button>;
+  return <Button onClick={embed}>{t('Operation.batchEmbedding')}</Button>;
 }

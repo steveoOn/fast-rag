@@ -68,8 +68,12 @@
       "createAt": "Upload Time"
     },
     "Operation": {
+      "title": "Operation",
       "delete": "Delete",
-      "embedding": "Document Analysis"
+      "batchEmbedding": "Batch Parse Documents",
+      "uploadNewVersion": "Upload New Version",
+      "embeddingCurrentDoc": "Parse Current Version",
+      "viewVersions": "View Version History"
     },
     "Messages": {
       "selectFiles": "Please select files"

@@ -13,8 +13,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -23,6 +28,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+
 import { TableData } from '@/types';
 import useFilesManagementStore from '../store';
 
@@ -71,6 +80,32 @@ export default function FilesTable() {
       accessorKey: 'created_at',
       header: t('Column.createAt'),
       cell: ({ row }) => <div className="capitalize">{row.getValue('created_at')}</div>,
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const payment = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>{t('Operation.title')}</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+                {t('Operation.uploadNewVersion')}
+              </DropdownMenuItem>
+              <DropdownMenuItem>{t('Operation.embeddingCurrentDoc')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('Operation.viewVersions')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 
