@@ -124,3 +124,13 @@ export type ClientInsert = z.infer<typeof clientsSchema>;
 export type AccessToken = z.infer<typeof access_tokensSelectSchema>;
 export type AccessTokenInsert = z.infer<typeof access_tokensSchema>;
 export type DocumentType = (typeof document_type.enumValues)[number];
+
+export const documentsSchema = createInsertSchema(documents);
+export const documentsSelectSchema = createSelectSchema(documents);
+export type Document = z.infer<typeof documentsSelectSchema>;
+export type DocumentInsert = z.infer<typeof documentsSchema>;
+
+export const document_versionsSchema = createInsertSchema(document_versions);
+export const document_versionsSelectSchema = createSelectSchema(document_versions);
+export type DocumentVersion = z.infer<typeof document_versionsSelectSchema>;
+export type DocumentVersionInsert = z.infer<typeof document_versionsSchema>;

@@ -1,16 +1,9 @@
 import { embedMany } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-
-const openai = createOpenAI({
-  baseURL: 'https://api.ohmygpt.com/v1/',
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const model = openai.embedding('text-embedding-3-small');
+import { registry } from '@/lib/utils/models-registry';
 
 export async function embedding(values: string[]) {
   const { embeddings } = await embedMany({
-    model,
+    model: registry.textEmbeddingModel('openai:text-embedding-3-small'),
     values,
   });
   return embeddings;

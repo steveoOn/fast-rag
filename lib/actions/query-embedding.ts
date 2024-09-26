@@ -21,13 +21,14 @@ export async function queryEmbeddings(args: {
   clientId: string;
   docs?: string[];
   docVersions?: string[];
+  similarityThreshold?: number;
 }) {
-  const { question, clientId, docs, docVersions } = args;
+  const { question, clientId, docs, docVersions, similarityThreshold = 0.5 } = args;
 
   const questionEmbedding = await embedding([question]);
   const similarity = sql<number>`1 - (${cosineDistance(embeddings.embedding, questionEmbedding[0])})`;
 
-  const whereConditions = [eq(documents.client_id, clientId), gt(similarity, 0.5)];
+  const whereConditions = [eq(documents.client_id, clientId), gt(similarity, similarityThreshold)];
 
   // 如果提供了文档 ID，添加到查询条件中
   if (docs?.length) {
