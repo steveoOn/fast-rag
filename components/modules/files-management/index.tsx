@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import Uploader from './uploader';
+import AddNewDoc from './add-new-doc';
 import Embedding from './embedding';
 import FilesTable from './files-table';
 import Delete from './delete';
@@ -18,8 +18,8 @@ export default function FilesManagement() {
 
   return (
     <div>
-      <div className="flex gap-4">
-        <Uploader />
+      <div className="flex gap-4 px-4">
+        <AddNewDoc />
         <Delete />
         <Embedding />
       </div>
