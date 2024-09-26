@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { document_versions } from '@/lib/db/schema/schema';
 
 export const ChunkMetadataSchema = z.object({
   start: z.number(),
@@ -36,7 +35,6 @@ export const EmbedDataSchema = z.object({
   document_version_id: z.string(),
   content: z.string(),
   embedding: createVectorSchema(1356),
-  document_version: z.number(),
 });
 
 // 派生类型

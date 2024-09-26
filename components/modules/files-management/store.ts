@@ -6,7 +6,10 @@ import { toast } from '@/hooks/use-toast';
 import { t } from '@/lib/utils';
 
 const getSelectedFiles = (table: Table<TableData>) => {
-  return table.getSelectedRowModel().rows.map((row: Row<TableData>) => row.original.id);
+  return table.getSelectedRowModel().rows.map((row: Row<TableData>) => ({
+    fileId: row.original.id,
+    versionId: row.original.version_id,
+  }));
 };
 
 const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
@@ -40,9 +43,9 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
   deleteFiles: async () => {
     const { table, getTableData } = get();
     if (!table) return;
-    const fileIds = getSelectedFiles(table);
+    const files = getSelectedFiles(table);
 
-    if (!fileIds?.length) {
+    if (!files?.length) {
       toast({
         title: t('FilesManagement.Messages.selectFiles'),
         variant: 'destructive',
@@ -50,15 +53,15 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
       return;
     }
 
-    await api.post('/files-management/delete', { fileIds });
+    await api.post('/files-management/delete', { fileIds: files.map((file) => file.fileId) });
     getTableData();
   },
   embed: async () => {
     const { table, getTableData } = get();
     if (!table) return;
-    const fileIds = getSelectedFiles(table);
+    const files = getSelectedFiles(table);
 
-    if (!fileIds?.length) {
+    if (!files?.length) {
       toast({
         title: t('FilesManagement.Messages.selectFiles'),
         variant: 'destructive',
@@ -67,7 +70,7 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     }
 
     await api.post('/doc-process/embedding', {
-      fileIds,
+      files,
       force: true,
     });
     getTableData();

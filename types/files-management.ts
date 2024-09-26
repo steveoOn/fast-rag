@@ -3,6 +3,7 @@ import { Table } from '@tanstack/react-table';
 
 export const TableDataSchema = z.object({
   id: z.string(),
+  version_id: z.string(),
   version: z.number(),
   name: z.string(),
   status: z.enum(['pending', 'processing', 'success', 'failed']).optional(),

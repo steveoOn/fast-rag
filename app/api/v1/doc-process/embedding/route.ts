@@ -8,15 +8,19 @@ import { EmbedData, CustomError } from '@/types';
 
 export async function POST(request: Request) {
   try {
-    const body: { fileIds: string[]; force?: boolean } = await request.json();
+    const body: {
+      files: { fileId: string; versionId: string }[];
+      force?: boolean;
+    } = await request.json();
     logger.info(`embedding body: ${JSON.stringify(body)}`);
+
     /**
      * force
      * true: 对所选文件重新生成向量
      * false: 跳过已生成过向量的文件
      */
-    const { fileIds, force } = body;
-    if (!fileIds?.length) {
+    const { files, force } = body;
+    if (!files?.length) {
       throw new CustomError('请正确选择文件上传', 'UPLOAD_FILES_ERROR');
     }
 
@@ -27,27 +31,28 @@ export async function POST(request: Request) {
     }
 
     const versionIds: string[] = [];
-    const allPromise = fileIds.map(async (fileId: string) => {
+    const allPromise = files.map(async (item: { fileId: string; versionId: string }) => {
+      const { fileId, versionId } = item;
       // 下载文档  如果force不为true  则跳过已经embedding 的文件
-      const file = await loadFile({ fileId, force, clientId: client.id });
+      const file = await loadFile({ fileId, force, clientId: client.id, versionId });
 
       if (!file) return null;
 
       logger.info(`files loaded: ${file.name}`);
       // 读取文档内容并chunk
       const chunkRes = await readFile(file);
+
       const chunks = chunkRes.chunks.map((chunk) => chunk.content);
       // 向量化
       const embed = await embedding(chunks);
       if (chunks.length !== embed.length) return [];
 
-      versionIds.push(file.document_version_id);
+      versionIds.push(versionId);
 
       return chunks.map((chunk, index) => ({
-        document_version_id: file.document_version_id,
+        document_version_id: versionId,
         content: chunk,
         embedding: embed[index],
-        document_version: file.version,
       }));
     });
 
