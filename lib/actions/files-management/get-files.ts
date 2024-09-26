@@ -44,7 +44,6 @@ export async function getFiles(apiKey: string) {
     .orderBy(desc(documents.created_at));
 
   return fileList.map((file) => {
-    Reflect.deleteProperty(file, 'client_id');
     return file;
   });
 }
