@@ -41,7 +41,7 @@ export default function FilesTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const { tableData, setTable } = useFilesManagementStore();
+  const { tableData, setTable, currentEmbedding } = useFilesManagementStore();
 
   const columns: ColumnDef<TableData>[] = [
     {
@@ -85,7 +85,7 @@ export default function FilesTable() {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const payment = row.original;
+        const rowData = row.original;
 
         return (
           <DropdownMenu>
@@ -97,10 +97,17 @@ export default function FilesTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{t('Operation.title')}</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-                {t('Operation.uploadNewVersion')}
+              <DropdownMenuItem>{t('Operation.uploadNewVersion')}</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  currentEmbedding({
+                    fileId: rowData.id,
+                    versionId: rowData.version_id,
+                  });
+                }}
+              >
+                {t('Operation.embeddingCurrentDoc')}
               </DropdownMenuItem>
-              <DropdownMenuItem>{t('Operation.embeddingCurrentDoc')}</DropdownMenuItem>
               <DropdownMenuItem>{t('Operation.viewVersions')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

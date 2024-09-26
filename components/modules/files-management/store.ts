@@ -56,7 +56,7 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     await api.post('/files-management/delete', { fileIds: files.map((file) => file.fileId) });
     getTableData();
   },
-  embed: async () => {
+  batchEmbedding: async () => {
     const { table, getTableData } = get();
     if (!table) return;
     const files = getSelectedFiles(table);
@@ -71,6 +71,15 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
 
     await api.post('/doc-process/embedding', {
       files,
+      force: true,
+    });
+    getTableData();
+  },
+  currentEmbedding: async (file) => {
+    const { getTableData } = get();
+
+    await api.post('/doc-process/embedding', {
+      files: [file],
       force: true,
     });
     getTableData();

@@ -23,7 +23,8 @@ export const FilesManagementStoreSchema = z.object({
   deleteFiles: z.function(),
   getTableData: z.function().returns(z.promise(z.void())),
   uploadFiles: z.function().args(z.custom<React.ChangeEvent<HTMLInputElement>>()),
-  embed: z.function(),
+  batchEmbedding: z.function(),
+  currentEmbedding: z.function().args(z.custom<{ fileId: string; versionId: string }>()),
 });
 
 export type FilesManagementStore = z.infer<typeof FilesManagementStoreSchema>;
