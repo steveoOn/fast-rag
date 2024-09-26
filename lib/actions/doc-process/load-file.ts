@@ -16,18 +16,25 @@ async function fetchFileContent(url: string): Promise<ArrayBuffer> {
   }
 }
 
-export async function loadFile(args: { fileId: string; force?: boolean; clientId: string }) {
-  const { fileId, force, clientId } = args;
+export async function loadFile(args: {
+  fileId: string;
+  force?: boolean;
+  clientId: string;
+  versionId: string;
+}) {
+  const { fileId, force, clientId, versionId } = args;
 
+  // 根据clientId和documentId查文档
   const queryDocument = db
     .select()
     .from(documents)
     .where(and(eq(documents.id, fileId), eq(documents.client_id, clientId)));
 
+  // 根据versionId在版本的表里查文档id
   const versionQuery = db
-    .select({ version: document_versions.version, id: document_versions.id })
+    .select({ document_id: document_versions.document_id })
     .from(document_versions)
-    .where(eq(document_versions.document_id, fileId));
+    .where(eq(document_versions.id, versionId));
 
   const [[file], [versionResult]] = await Promise.all([queryDocument, versionQuery]);
 
@@ -35,10 +42,15 @@ export async function loadFile(args: { fileId: string; force?: boolean; clientId
     throw new CustomError('未查找到文件', 'FIND_FILE_ERROR');
   }
 
+  // 用版本表里的document_id和文档id对比，如果不一致则抛出错误
+  if (fileId !== versionResult?.document_id) {
+    throw new CustomError('文件与版本不匹配', 'FIND_FILE_AND_VERSION_ERROR');
+  }
+
   const embeddingData = await db
     .select({ id: embeddings.id })
     .from(embeddings)
-    .where(eq(embeddings.document_version_id, versionResult.id));
+    .where(eq(embeddings.document_version_id, versionId));
 
   // 已经做过向量化则跳过
   if (!force && embeddingData?.length) return null;
@@ -51,8 +63,6 @@ export async function loadFile(args: { fileId: string; force?: boolean; clientId
 
   return {
     ...file,
-    version: versionResult?.version,
-    document_version_id: versionResult?.id,
     content,
   };
 }

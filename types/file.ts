@@ -37,8 +37,6 @@ export const FileLoadedSchema = z.object({
   type: z.enum(document_type.enumValues),
   created_at: z.string(),
   updated_at: z.string(),
-  version: z.number(),
-  document_version_id: z.string(),
 });
 
 // 文件读取

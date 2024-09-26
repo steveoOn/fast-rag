@@ -15,6 +15,7 @@ export async function getFiles(apiKey: string) {
     db
       .select({
         document_id: document_versions.document_id,
+        version_id: document_versions.id,
         version: document_versions.version,
       })
       .from(document_versions)
@@ -33,6 +34,7 @@ export async function getFiles(apiKey: string) {
       id: documents.id,
       name: documents.name,
       type: documents.type,
+      version_id: latestVersions.version_id,
       storage_url: documents.storage_url,
       created_at: documents.created_at,
       updated_at: documents.updated_at,
