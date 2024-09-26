@@ -7,10 +7,7 @@ import { CustomError } from '@/types';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (
-    pathname.startsWith('/api/v1/files-management') ||
-    pathname.startsWith('/api/v1/doc-process')
-  ) {
+  if (pathname.startsWith('/api/v1/')) {
     try {
       const apiKey = extractApiKey(request);
       logger.info(`API Key: ${apiKey}`);
@@ -19,7 +16,7 @@ export async function middleware(request: NextRequest) {
       if (error instanceof CustomError) {
         return NextResponse.json({ error: error.message }, { status: 401 });
       }
-      return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+      return NextResponse.json({ error: '无效的 API 密钥' }, { status: 401 });
     }
   }
 
