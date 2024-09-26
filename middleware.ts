@@ -5,8 +5,38 @@ import { extractApiKey } from '@/lib/utils/extract-api-key';
 import { validateRedisAPIKey } from '@/lib/api-key/validate-redis-key';
 import { CustomError } from '@/types';
 
+const allowedOrigins = [
+  'https://chatinspire.app',
+  'https://chat-inspire-next-git-test-test-chat-page-siwencorp.vercel.app',
+  'http://localhost:3000',
+];
+
+const corsHeaders = {
+  'Access-Control-Allow-Credentials': 'true',
+  'Access-Control-Allow-Methods': 'GET,DELETE,PATCH,POST,PUT,OPTIONS',
+  'Access-Control-Allow-Headers':
+    'Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+};
+
+function addCorsHeaders(response: NextResponse, origin: string) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+  if (allowedOrigins.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin || '*');
+  }
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const origin = request.headers.get('origin') ?? '';
+
+  // 处理预检请求
+  if (request.method === 'OPTIONS') {
+    return addCorsHeaders(new NextResponse(null, { status: 200 }), origin);
+  }
+
   if (pathname.startsWith('/api/v1/')) {
     try {
       const apiKey = extractApiKey(request);
@@ -14,13 +44,17 @@ export async function middleware(request: NextRequest) {
       await validateRedisAPIKey(apiKey);
     } catch (error) {
       if (error instanceof CustomError) {
-        return NextResponse.json({ error: error.message }, { status: 401 });
+        return addCorsHeaders(NextResponse.json({ error: error.message }, { status: 401 }), origin);
       }
-      return NextResponse.json({ error: '无效的 API 密钥' }, { status: 401 });
+      return addCorsHeaders(
+        NextResponse.json({ error: '无效的 API 密钥' }, { status: 401 }),
+        origin
+      );
     }
   }
 
-  return await updateSession(request);
+  const response = await updateSession(request);
+  return addCorsHeaders(response, origin);
 }
 
 export const config = {
