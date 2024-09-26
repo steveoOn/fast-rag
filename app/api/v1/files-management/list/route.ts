@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { extractApiKey, handleError } from '@/lib/utils';
 import { getFiles } from '@/lib/actions';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     const apiKey = extractApiKey(request);

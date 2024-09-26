@@ -72,6 +72,7 @@
       "delete": "删除",
       "batchEmbedding": "批量解析文档",
       "uploadNewVersion": "上传新版本",
+      "uploadNewDoc": "上传新文档",
       "embeddingCurrentDoc": "解析当前版本",
       "viewVersions": "查看历史版本"
     },
