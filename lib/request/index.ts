@@ -19,13 +19,7 @@ class Request {
   private setupInterceptors() {
     // 添加token
     this.instance.interceptors.request.use(async (config) => {
-      let token = sessionStorage.getItem('token');
-      if (!token) {
-        token = await getUserActiveKey();
-        if (token) {
-          sessionStorage.setItem('token', token);
-        }
-      }
+      const token = await getUserActiveKey();
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       }
