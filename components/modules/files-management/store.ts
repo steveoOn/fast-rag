@@ -84,6 +84,19 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     });
     getTableData();
   },
+  addNewVersion: async ({ file, documentId }) => {
+    const { getTableData } = get();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('documentId', documentId);
+
+    await api.post('/files-management/new-version', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    getTableData();
+  },
 }));
 
 export default useFilesManagementStore;
