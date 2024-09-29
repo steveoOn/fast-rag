@@ -1,5 +1,5 @@
 'use client';
-import * as React from 'react';
+import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   ColumnDef,
@@ -37,11 +37,26 @@ import useFilesManagementStore from '../store';
 
 export default function FilesTable() {
   const t = useTranslations('FilesManagement');
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const { tableData, setTable, currentEmbedding } = useFilesManagementStore();
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [currentDocumentId, setCurrentDocumentId] = useState<string | null>(null);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const { tableData, setTable, currentEmbedding, addNewVersion } = useFilesManagementStore();
+
+  const selectFiles = (documentId: string) => {
+    const inputFIle = inputFileRef.current;
+    if (!inputFIle) return;
+    setCurrentDocumentId(documentId);
+    inputFIle.click();
+  };
+
+  const uploadNewVersion = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target?.files?.[0];
+    if (!file || !currentDocumentId) return;
+    addNewVersion({ file, documentId: currentDocumentId });
+  };
 
   const columns: ColumnDef<TableData>[] = [
     {
@@ -97,7 +112,13 @@ export default function FilesTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{t('Operation.title')}</DropdownMenuLabel>
-              <DropdownMenuItem>{t('Operation.uploadNewVersion')}</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  selectFiles(rowData.id);
+                }}
+              >
+                {t('Operation.uploadNewVersion')}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   currentEmbedding({
@@ -135,12 +156,13 @@ export default function FilesTable() {
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTable(table);
   }, [setTable, table]);
 
   return (
     <div className="w-full">
+      <input className="hidden" type="file" ref={inputFileRef} onChange={uploadNewVersion} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
