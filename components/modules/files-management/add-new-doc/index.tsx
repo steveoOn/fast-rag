@@ -6,7 +6,7 @@ import useFilesManagementStore from '../store';
 
 export default function AddNewDoc() {
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const t = useTranslations('FilesManagement.Operation');
+  const t = useTranslations('Platform.FilesManagement.Operation');
   const { uploadFiles } = useFilesManagementStore();
 
   const selectFiles = () => {

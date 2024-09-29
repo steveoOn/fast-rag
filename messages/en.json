@@ -61,24 +61,6 @@
     "ja": "Japanese",
     "zh": "Chinese"
   },
-  "FilesManagement": {
-    "Column": {
-      "fileName": "File Name",
-      "fileVersion": "Version",
-      "createAt": "Upload Time"
-    },
-    "Operation": {
-      "title": "Operation",
-      "delete": "Delete",
-      "batchEmbedding": "Batch Parse Documents",
-      "uploadNewVersion": "Upload New Version",
-      "embeddingCurrentDoc": "Parse Current Version",
-      "viewVersions": "View Version History"
-    },
-    "Messages": {
-      "selectFiles": "Please select files"
-    }
-  },
   "Platform": {
     "Sidebar": {
       "home": "Home",
@@ -161,6 +143,34 @@
         "tokenActivated": "Token activated",
         "tokenActivatedDescription": "Token activated successfully"
       }
+    },
+    "FilesManagement": {
+      "Column": {
+        "fileName": "File Name",
+        "fileVersion": "Version",
+        "createAt": "Upload Time"
+      },
+      "Operation": {
+        "title": "Operation",
+        "delete": "Delete",
+        "batchEmbedding": "Batch Parse Documents",
+        "uploadNewVersion": "Upload New Version",
+        "embeddingCurrentDoc": "Parse Current Version",
+        "viewVersions": "View Version History"
+      },
+      "Messages": {
+        "selectFiles": "Please select files"
+      }
+    },
+    "VersionsManagement": {
+      "title": "Version Management",
+      "Column": {
+        "name": "File Name",
+        "version": "Version",
+        "createdAt": "Created At",
+        "preview": "Preview"
+      },
+      "backToFiles": "Back to Data Management"
     }
   },
   "Utils": {
