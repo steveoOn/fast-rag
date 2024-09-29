@@ -6,6 +6,7 @@ import { validateRedisAPIKey } from '@/lib/api-key/validate-redis-key';
 import { CustomError } from '@/types';
 
 const allowedOrigins = [
+  'https://www.chatinspire.com',
   'https://chatinspire.app',
   'https://chat-inspire-next-git-test-test-chat-page-siwencorp.vercel.app',
   'http://localhost:3000',
