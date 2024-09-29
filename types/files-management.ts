@@ -41,12 +41,12 @@ export const FilesManagementStoreSchema = z.object({
    * @param {string} versionId - 版本ID
    * @returns {void}
    */
-  deleteFiles: z.function().args(z.string(), z.string()).returns(z.void()),
+  deleteFiles: z.function(),
   /**
    * 获取表格数据
    * @returns {Promise<void>}
    */
-  getTableData: z.function().returns(z.promise(z.void())),
+  getTableData: z.function(),
   /**
    * 上传新文档
    * @param {React.ChangeEvent<HTMLInputElement>} event - 文件上传事件
