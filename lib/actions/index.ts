@@ -10,3 +10,4 @@ export * from './doc-process/embedding';
 export * from './doc-process/read-file';
 export * from './query-embedding';
 export * from './files-management/upload/add-version';
+export * from './files-management/get-versions';

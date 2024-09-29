@@ -61,24 +61,6 @@
     "ja": "日本語",
     "zh": "中国語"
   },
-  "FilesManagement": {
-    "Column": {
-      "fileName": "ファイル名",
-      "fileVersion": "バージョン",
-      "createAt": "アップロード日時"
-    },
-    "Operation": {
-      "title": "操作",
-      "delete": "削除",
-      "batchEmbedding": "文書の一括解析",
-      "uploadNewVersion": "新バージョンをアップロード",
-      "embeddingCurrentDoc": "現在のバージョンを解析",
-      "viewVersions": "バージョン履歴を表示"
-    },
-    "Messages": {
-      "selectFiles": "ファイルを選択してください"
-    }
-  },
   "Platform": {
     "Sidebar": {
       "home": "ホーム",
@@ -161,6 +143,34 @@
         "tokenActivated": "キーが有効になりました",
         "tokenActivatedDescription": "キーが正常に有効になりました"
       }
+    },
+    "FilesManagement": {
+      "Column": {
+        "fileName": "ファイル名",
+        "fileVersion": "バージョン",
+        "createAt": "アップロード日時"
+      },
+      "Operation": {
+        "title": "操作",
+        "delete": "削除",
+        "batchEmbedding": "文書の一括解析",
+        "uploadNewVersion": "新バージョンをアップロード",
+        "embeddingCurrentDoc": "現在のバージョンを解析",
+        "viewVersions": "バージョン履歴を表示"
+      },
+      "Messages": {
+        "selectFiles": "ファイルを選択してください"
+      }
+    },
+    "VersionsManagement": {
+      "title": "バージョン管理",
+      "Column": {
+        "name": "ファイル名",
+        "version": "バージョン",
+        "createdAt": "作成日時",
+        "preview": "プレビュー"
+      },
+      "backToFiles": "データ管理に戻る"
     }
   },
   "Utils": {

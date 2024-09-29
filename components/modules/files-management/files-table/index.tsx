@@ -1,6 +1,8 @@
 'use client';
+
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -36,7 +38,8 @@ import { TableData } from '@/types';
 import useFilesManagementStore from '../store';
 
 export default function FilesTable() {
-  const t = useTranslations('FilesManagement');
+  const t = useTranslations('Platform.FilesManagement');
+  const router = useRouter();
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [currentDocumentId, setCurrentDocumentId] = useState<string | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -56,6 +59,10 @@ export default function FilesTable() {
     const file = e.target?.files?.[0];
     if (!file || !currentDocumentId) return;
     addNewVersion({ file, documentId: currentDocumentId });
+  };
+
+  const toViewVersions = (documentId: string) => {
+    router.push(`/platform/data-management/versions/${documentId}`);
   };
 
   const columns: ColumnDef<TableData>[] = [
@@ -129,7 +136,13 @@ export default function FilesTable() {
               >
                 {t('Operation.embeddingCurrentDoc')}
               </DropdownMenuItem>
-              <DropdownMenuItem>{t('Operation.viewVersions')}</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  toViewVersions(rowData.id);
+                }}
+              >
+                {t('Operation.viewVersions')}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
