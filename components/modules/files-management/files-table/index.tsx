@@ -46,7 +46,8 @@ export default function FilesTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const { tableData, setTable, currentEmbedding, addNewVersion } = useFilesManagementStore();
+  const { tableData, setTable, currentEmbedding, addNewVersion, updateSelectedFiles } =
+    useFilesManagementStore();
 
   const selectFiles = (documentId: string) => {
     const inputFIle = inputFileRef.current;
@@ -74,14 +75,20 @@ export default function FilesTable() {
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+            updateSelectedFiles();
+          }}
           aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+            updateSelectedFiles();
+          }}
           aria-label="Select row"
         />
       ),

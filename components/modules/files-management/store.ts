@@ -19,6 +19,14 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
   setTable: (table: Table<TableData>) => {
     set({ table });
   },
+  updateSelectedFiles: () => {
+    const { table } = get();
+    if (!table) return;
+    setTimeout(() => {
+      const selectedFiles = getSelectedFiles(table);
+      set({ selectedFiles });
+    }, 0);
+  },
   uploadFiles: async (e) => {
     const { getTableData } = get();
     const files = e.target?.files;
@@ -47,7 +55,7 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
 
     if (!files?.length) {
       toast({
-        title: t('FilesManagement.Messages.selectFiles'),
+        title: t('Platform.FilesManagement.Messages.selectFiles'),
         variant: 'destructive',
       });
       return;
@@ -63,7 +71,7 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
 
     if (!files?.length) {
       toast({
-        title: t('FilesManagement.Messages.selectFiles'),
+        title: t('Platform.FilesManagement.Messages.selectFiles'),
         variant: 'destructive',
       });
       return;

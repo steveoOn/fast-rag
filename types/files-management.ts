@@ -31,6 +31,11 @@ export const FilesManagementStoreSchema = z.object({
    */
   tableData: z.array(TableDataSchema),
   /**
+   * 选中的文件
+   * @type {Array<{ fileId: string; versionId: string }>}
+   */
+  selectedFiles: z.array(z.object({ fileId: z.string(), versionId: z.string() })),
+  /**
    * 设置表格实例
    * @param {Table<TableData>} table - 表格实例
    */
@@ -80,6 +85,10 @@ export const FilesManagementStoreSchema = z.object({
     .function()
     .args(z.custom<{ file: File; documentId: string }>())
     .returns(z.void()),
+  /**
+   * 更新选中的文件
+   */
+  updateSelectedFiles: z.function(),
 });
 
 export type FilesManagementStore = z.infer<typeof FilesManagementStoreSchema>;
