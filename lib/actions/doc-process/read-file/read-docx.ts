@@ -5,7 +5,6 @@ export default function readDocx(content: Buffer): Promise<string> {
     mammoth
       .extractRawText({ buffer: content })
       .then((result) => {
-        console.log(result.value, '********');
         resolve(result.value);
       })
       .catch((e) => {
