@@ -2,6 +2,7 @@ import { FileLoaded, FileRead } from '@/types';
 import { chunkDocumentByParagraph } from './chunks';
 import readTxt from './read-file/read-txt';
 import readPdf from './read-file/read-pdf';
+import readDocx from './read-file/read-docx';
 import { document_type } from '@/lib/db/schema/schema';
 
 const readFileMap: Partial<
@@ -9,6 +10,7 @@ const readFileMap: Partial<
 > = {
   txt: readTxt,
   pdf: readPdf,
+  docx: readDocx,
   // 添加其他文件类型的处理函数
 };
 
