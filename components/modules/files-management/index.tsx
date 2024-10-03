@@ -4,6 +4,7 @@ import AddNewDoc from './add-new-doc';
 import Embedding from './embedding';
 import FilesTable from './files-table';
 import Delete from './delete';
+import UploadProgress from './progress';
 import useFilesManagementStore from './store';
 
 export default function FilesManagement() {
@@ -23,6 +24,7 @@ export default function FilesManagement() {
         <Delete />
         <Embedding />
       </div>
+      <UploadProgress />
       <div className="p-4">
         <FilesTable />
       </div>

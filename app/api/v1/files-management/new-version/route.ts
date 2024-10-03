@@ -7,8 +7,8 @@ export async function POST(request: Request) {
   const encoder = new TextEncoder();
   const stream = new TransformStream();
   const writer = stream.writable.getWriter();
-  const sendProgress = async (percentage: string, fileName: string) => {
-    await writer.write(encoder.encode(`data: ${JSON.stringify({ percentage, fileName })}\n\n`));
+  const sendProgress = async (percent: string, fileName: string) => {
+    await writer.write(encoder.encode(`data: ${JSON.stringify({ percent, fileName })}\n\n`));
   };
 
   try {

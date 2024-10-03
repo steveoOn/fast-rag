@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Table } from '@tanstack/react-table';
+import { FileUploadResSchema } from './file';
 
 export const TableDataSchema = z.object({
   id: z.string(),
@@ -35,6 +36,37 @@ export const FilesManagementStoreSchema = z.object({
    * @type {Array<{ fileId: string; versionId: string }>}
    */
   selectedFiles: z.array(z.object({ fileId: z.string(), versionId: z.string() })),
+  /**
+   * 上传进度
+   * @type {Array<{ fileName: string; percent: string; completed: boolean; files: FileUploadRes[] }>}
+   */
+  uploadingProgress: z.array(
+    z.object({
+      fileName: z.string(),
+      percent: z.string(),
+      completed: z.boolean(),
+      files: z.array(FileUploadResSchema),
+    })
+  ),
+  /**
+   * 更新上传进度
+   * @param {Object} params - 参数对象
+   * @param {string} params.fileName - 文件名
+   * @param {string} params.percent - 进度百分比
+   * @param {boolean} params.completed - 是否完成
+   * @returns {void}
+   */
+  updateUploadingProgress: z
+    .function()
+    .args(
+      z.object({
+        fileName: z.string(),
+        percent: z.string(),
+        completed: z.boolean(),
+        files: z.array(FileUploadResSchema),
+      })
+    )
+    .returns(z.void()),
   /**
    * 设置表格实例
    * @param {Table<TableData>} table - 表格实例

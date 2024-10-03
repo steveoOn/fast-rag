@@ -23,7 +23,7 @@ async function uploadFileToStorage({
 }: {
   file: UploadFile;
   apiKey: string;
-  onProgress: (percentage: string) => void;
+  onProgress: (percent: string) => void;
 }): Promise<FileUploadRes> {
   await validateAPIKey(apiKey);
 
@@ -59,9 +59,9 @@ async function uploadFileToStorage({
         cleanup();
       },
       onProgress: (bytesUploaded, bytesTotal) => {
-        const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-        logger.info(`上传进度: ${percentage}%`);
-        onProgress(percentage);
+        const percent = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+        logger.info(`上传进度: ${percent}%`);
+        onProgress(percent);
       },
       onSuccess: () => {
         logger.info('上传成功');
@@ -91,7 +91,7 @@ async function uploadFileToStorage({
 export async function upload(args: {
   files: File[];
   apiKey: string;
-  sendProgress: (percentage: string, fileName: string) => void;
+  sendProgress: (percent: string, fileName: string) => void;
 }) {
   const { files, apiKey, sendProgress } = args;
   const allPromise = [];
@@ -114,7 +114,7 @@ export async function upload(args: {
       // metadata: validatedData.metadata,
     };
 
-    const onProgress = (percentage: string) => sendProgress(percentage, file.name);
+    const onProgress = (percent: string) => sendProgress(percent, file.name);
     allPromise.push(uploadFileToStorage({ file: uploadFile, apiKey, onProgress }));
   }
 

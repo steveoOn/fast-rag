@@ -4,6 +4,7 @@ import { FilesManagementStore, TableData } from '@/types';
 import { Table, Row } from '@tanstack/react-table';
 import { toast } from '@/hooks/use-toast';
 import { t } from '@/lib/utils';
+import { FileUploadRes } from '@/types/file';
 
 const getSelectedFiles = (table: Table<TableData>) => {
   return table.getSelectedRowModel().rows.map((row: Row<TableData>) => ({
@@ -16,6 +17,7 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
   table: null,
   tableData: [],
   selectedFiles: [],
+  uploadingProgress: [],
   setTable: (table: Table<TableData>) => {
     set({ table });
   },
@@ -26,27 +28,6 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
       const selectedFiles = getSelectedFiles(table);
       set({ selectedFiles });
     }, 0);
-  },
-  uploadFiles: async (e) => {
-    const { getTableData } = get();
-    const files = e.target?.files;
-    if (files) {
-      const formData = new FormData();
-      Array.from(files).forEach((file, index) => {
-        formData.append(`file-${index}`, file);
-      });
-
-      api.sse({
-        url: '/files-management/upload',
-        data: formData,
-        onData: (data) => {
-          console.log(data);
-          if (data.completed) {
-            getTableData();
-          }
-        },
-      });
-    }
   },
   getTableData: async () => {
     const response = await api.get<TableData[]>('/files-management/list');
@@ -97,8 +78,65 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     });
     getTableData();
   },
+  updateUploadingProgress: (data) => {
+    const fileName = data.completed ? data.files[0].name : data.fileName;
+
+    set((state) => {
+      const { uploadingProgress } = state;
+      if (data.completed || data.percent === '100.00') {
+        // 如果完成，从列表中移除
+        return {
+          uploadingProgress: uploadingProgress.filter((item) => item.fileName !== fileName),
+        };
+      } else {
+        const existingItemIndex = uploadingProgress.findIndex((item) => item.fileName === fileName);
+
+        if (existingItemIndex === -1) {
+          // 如果不存在，添加到列表
+          return {
+            uploadingProgress: [...uploadingProgress, data],
+          };
+        } else {
+          // 如果存在，更新该项
+          const updatedProgress = [...uploadingProgress];
+          updatedProgress[existingItemIndex] = data;
+          return {
+            uploadingProgress: updatedProgress,
+          };
+        }
+      }
+    });
+  },
+  uploadFiles: async (e) => {
+    const { getTableData, updateUploadingProgress } = get();
+    const files = e.target?.files;
+    if (files) {
+      const formData = new FormData();
+      Array.from(files).forEach((file, index) => {
+        formData.append(`file-${index}`, file);
+      });
+
+      api.sse({
+        url: '/files-management/upload',
+        data: formData,
+        onData: (data) => {
+          updateUploadingProgress(
+            data as {
+              completed: boolean;
+              percent: string;
+              fileName: string;
+              files: FileUploadRes[];
+            }
+          );
+          if (data.completed) {
+            getTableData();
+          }
+        },
+      });
+    }
+  },
   addNewVersion: async ({ file, documentId }) => {
-    const { getTableData } = get();
+    const { getTableData, updateUploadingProgress } = get();
     const formData = new FormData();
     formData.append('file', file);
     formData.append('documentId', documentId);
@@ -106,9 +144,15 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     api.sse({
       url: '/files-management/new-version',
       data: formData,
-      onData: (data) => {
-        console.log(data);
-
+      onData: (data: { [key: string]: unknown; completed?: boolean; percent?: string }) => {
+        updateUploadingProgress(
+          data as {
+            completed: boolean;
+            percent: string;
+            fileName: string;
+            files: FileUploadRes[];
+          }
+        );
         if (data.completed) {
           getTableData();
         }

@@ -79,7 +79,7 @@ class Request {
     url: string;
     data: BodyInit;
     config?: RequestInit;
-    onData: (data: { completed?: boolean; percent?: string; [x: string]: unknown }) => void;
+    onData: (data: { completed?: boolean; percent?: string; [key: string]: unknown }) => void;
   }) => {
     const { url, data, config, onData } = args;
     const token = await getUserActiveKey();
