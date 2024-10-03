@@ -16,7 +16,15 @@ const uploadFileSchema = z.object({
 
 const supabase = createClient(SUPABASE_URL!, SUPABASE_PUBLIC_ANON_KEY!);
 
-async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<FileUploadRes> {
+async function uploadFileToStorage({
+  file,
+  apiKey,
+  onProgress,
+}: {
+  file: UploadFile;
+  apiKey: string;
+  onProgress: (percentage: string) => void;
+}): Promise<FileUploadRes> {
   await validateAPIKey(apiKey);
 
   const bucket = 'file-uploader-test';
@@ -53,6 +61,7 @@ async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<Fi
       onProgress: (bytesUploaded, bytesTotal) => {
         const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
         logger.info(`上传进度: ${percentage}%`);
+        onProgress(percentage);
       },
       onSuccess: () => {
         logger.info('上传成功');
@@ -79,7 +88,12 @@ async function uploadFileToStorage(file: UploadFile, apiKey: string): Promise<Fi
   });
 }
 
-export async function upload(files: File[], apiKey: string) {
+export async function upload(args: {
+  files: File[];
+  apiKey: string;
+  sendProgress: (percentage: string, fileName: string) => void;
+}) {
+  const { files, apiKey, sendProgress } = args;
   const allPromise = [];
 
   for await (const file of files) {
@@ -100,7 +114,8 @@ export async function upload(files: File[], apiKey: string) {
       // metadata: validatedData.metadata,
     };
 
-    allPromise.push(uploadFileToStorage(uploadFile, apiKey));
+    const onProgress = (percentage: string) => sendProgress(percentage, file.name);
+    allPromise.push(uploadFileToStorage({ file: uploadFile, apiKey, onProgress }));
   }
 
   const res = await Promise.allSettled(allPromise);

@@ -1,15 +1,21 @@
 import { db } from '@/lib/db';
 import { documents, document_versions, embeddings } from '@/lib/db/schema/schema';
 import { eq, and } from 'drizzle-orm';
-import axios from 'axios';
 import { CustomError } from 'types';
 
 async function fetchFileContent(url: string): Promise<ArrayBuffer> {
   try {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
-    return response.data;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // 直接将响应读取为 ArrayBuffer
+    const arrayBuffer = await response.arrayBuffer();
+    return arrayBuffer;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (error instanceof Error) {
       throw new Error(`Failed to fetch file: ${error.message}`);
     }
     throw error;

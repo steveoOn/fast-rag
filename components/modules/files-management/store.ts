@@ -36,12 +36,16 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
         formData.append(`file-${index}`, file);
       });
 
-      await api.post('/files-management/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+      api.sse({
+        url: '/files-management/upload',
+        data: formData,
+        onData: (data) => {
+          console.log(data);
+          if (data.completed) {
+            getTableData();
+          }
         },
       });
-      getTableData();
     }
   },
   getTableData: async () => {
@@ -81,6 +85,7 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
       files,
       force: true,
     });
+
     getTableData();
   },
   currentEmbedding: async (file) => {
@@ -98,12 +103,17 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     formData.append('file', file);
     formData.append('documentId', documentId);
 
-    await api.post('/files-management/new-version', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    api.sse({
+      url: '/files-management/new-version',
+      data: formData,
+      onData: (data) => {
+        console.log(data);
+
+        if (data.completed) {
+          getTableData();
+        }
       },
     });
-    getTableData();
   },
 }));
 

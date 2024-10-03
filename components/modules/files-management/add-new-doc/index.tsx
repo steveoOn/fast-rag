@@ -17,7 +17,16 @@ export default function AddNewDoc() {
 
   return (
     <div className="inline-block">
-      <Input className="hidden" ref={inputFileRef} type="file" multiple onChange={uploadFiles} />
+      <Input
+        className="hidden"
+        ref={inputFileRef}
+        type="file"
+        multiple
+        onChange={(e) => {
+          uploadFiles(e);
+          e.target.value = '';
+        }}
+      />
       <Button onClick={selectFiles} variant="outline">
         {t('uploadNewDoc')}
       </Button>
