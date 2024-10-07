@@ -21,6 +21,8 @@ const TableSchema = z.custom<Table<z.infer<typeof TableDataSchema>>>((data) => {
  * @typedef {Object} FilesManagementStore
  */
 export const FilesManagementStoreSchema = z.object({
+  isOperation: z.boolean(),
+  isLoading: z.boolean(),
   /**
    * 用于显示文件数据的表格实例
    * @type {Table<TableData> | null}

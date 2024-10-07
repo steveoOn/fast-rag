@@ -14,6 +14,8 @@ const getSelectedFiles = (table: Table<TableData>) => {
 };
 
 const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
+  isOperation: false,
+  isLoading: true,
   table: null,
   tableData: [],
   selectedFiles: [],
@@ -30,8 +32,12 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
     }, 0);
   },
   getTableData: async () => {
+    set({ isLoading: true });
     const response = await api.get<TableData[]>('/files-management/list');
-    set({ tableData: response.data || [] });
+    set({
+      tableData: response.data || [],
+      isLoading: false,
+    });
   },
   deleteFiles: async () => {
     const { table, getTableData } = get();
@@ -45,9 +51,11 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
       });
       return;
     }
+    set({ isOperation: true });
 
     await api.post('/files-management/delete', { fileIds: files.map((file) => file.fileId) });
     getTableData();
+    set({ isOperation: false });
   },
   batchEmbedding: async () => {
     const { table, getTableData } = get();
@@ -62,21 +70,25 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
       return;
     }
 
+    set({ isOperation: true });
     await api.post('/doc-process/embedding', {
       files,
       force: true,
     });
 
     getTableData();
+    set({ isOperation: false });
   },
   currentEmbedding: async (file) => {
     const { getTableData } = get();
 
+    set({ isOperation: true });
     await api.post('/doc-process/embedding', {
       files: [file],
       force: true,
     });
     getTableData();
+    set({ isOperation: false });
   },
   updateUploadingProgress: (data) => {
     const fileName = data.completed ? data.files[0].name : data.fileName;

@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Loading from '@/components/loading';
 import AddNewDoc from './add-new-doc';
 import Embedding from './embedding';
 import FilesTable from './files-table';
@@ -9,7 +10,7 @@ import useFilesManagementStore from './store';
 
 export default function FilesManagement() {
   const renderCount = useRef(0);
-  const { getTableData } = useFilesManagementStore();
+  const { getTableData, isLoading } = useFilesManagementStore();
 
   useEffect(() => {
     if (renderCount.current > 0) return;
@@ -28,6 +29,11 @@ export default function FilesManagement() {
       <div className="p-4">
         <FilesTable />
       </div>
+      {isLoading ? (
+        <div className="absolute w-full h-full dark:bg-gray-950 opacity-70 left-0 top-0">
+          <Loading />
+        </div>
+      ) : null}
     </div>
   );
 }

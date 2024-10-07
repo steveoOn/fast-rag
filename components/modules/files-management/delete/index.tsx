@@ -15,12 +15,12 @@ import useFilesManagementStore from '../store';
 
 export default function Delete() {
   const t = useTranslations('Platform.FilesManagement');
-  const { deleteFiles, selectedFiles } = useFilesManagementStore();
+  const { deleteFiles, selectedFiles, isOperation } = useFilesManagementStore();
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" disabled={selectedFiles.length === 0}>
+        <Button variant="destructive" disabled={isOperation || selectedFiles.length === 0}>
           {t('Operation.delete')}
         </Button>
       </AlertDialogTrigger>

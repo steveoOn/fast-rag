@@ -46,7 +46,7 @@ export default function FilesTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const { tableData, setTable, currentEmbedding, addNewVersion, updateSelectedFiles } =
+  const { tableData, setTable, currentEmbedding, addNewVersion, updateSelectedFiles, isOperation } =
     useFilesManagementStore();
 
   const selectFiles = (documentId: string) => {
@@ -127,6 +127,7 @@ export default function FilesTable() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{t('Operation.title')}</DropdownMenuLabel>
               <DropdownMenuItem
+                disabled={isOperation}
                 onClick={() => {
                   selectFiles(rowData.id);
                 }}
@@ -134,6 +135,7 @@ export default function FilesTable() {
                 {t('Operation.uploadNewVersion')}
               </DropdownMenuItem>
               <DropdownMenuItem
+                disabled={isOperation}
                 onClick={() => {
                   currentEmbedding({
                     fileId: rowData.id,
@@ -144,6 +146,7 @@ export default function FilesTable() {
                 {t('Operation.embeddingCurrentDoc')}
               </DropdownMenuItem>
               <DropdownMenuItem
+                disabled={isOperation}
                 onClick={() => {
                   toViewVersions(rowData.id);
                 }}

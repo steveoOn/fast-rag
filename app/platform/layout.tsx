@@ -38,7 +38,7 @@ function Sidebar() {
 
 export default function PlatformLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen bg-white dark:bg-gray-900">
+    <div className="flex relative h-screen bg-white dark:bg-gray-900">
       <Sheet>
         <SheetTrigger asChild>
           <Button
@@ -56,7 +56,7 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
       <aside className="hidden md:block w-64 bg-white border-r border-gray-200 dark:bg-gray-950 dark:border-gray-800">
         <Sidebar />
       </aside>
-      <main className="flex-1 p-6 overflow-auto bg-white dark:bg-gray-950">
+      <main className="flex-1 p-6 relative overflow-auto bg-white dark:bg-gray-950">
         <Suspense fallback={<Loading />}>{children}</Suspense>
       </main>
     </div>

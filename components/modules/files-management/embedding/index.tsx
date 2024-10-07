@@ -4,10 +4,10 @@ import useFilesManagementStore from '../store';
 
 export default function Embedding() {
   const t = useTranslations('Platform.FilesManagement');
-  const { batchEmbedding, selectedFiles } = useFilesManagementStore();
+  const { batchEmbedding, selectedFiles, isOperation } = useFilesManagementStore();
 
   return (
-    <Button onClick={batchEmbedding} disabled={selectedFiles.length === 0}>
+    <Button onClick={batchEmbedding} disabled={isOperation || selectedFiles.length === 0}>
       {t('Operation.batchEmbedding')}
     </Button>
   );

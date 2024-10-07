@@ -7,7 +7,7 @@ import useFilesManagementStore from '../store';
 export default function AddNewDoc() {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const t = useTranslations('Platform.FilesManagement.Operation');
-  const { uploadFiles } = useFilesManagementStore();
+  const { uploadFiles, isOperation } = useFilesManagementStore();
 
   const selectFiles = () => {
     const inputFIle = inputFileRef.current;
@@ -27,7 +27,7 @@ export default function AddNewDoc() {
           e.target.value = '';
         }}
       />
-      <Button onClick={selectFiles} variant="outline">
+      <Button onClick={selectFiles} disabled={isOperation} variant="outline">
         {t('uploadNewDoc')}
       </Button>
     </div>
