@@ -1,9 +1,10 @@
 import { FileLoaded, FileRead } from '@/types';
+import { document_type } from '@/lib/db/schema/schema';
 import { chunkDocumentByParagraph } from './chunks';
 import readTxt from './read-file/read-txt';
 import readPdf from './read-file/read-pdf';
 import readDocx from './read-file/read-docx';
-import { document_type } from '@/lib/db/schema/schema';
+import readPptx from './read-file/read-pptx';
 
 const readFileMap: Partial<
   Record<(typeof document_type.enumValues)[number], (content: Buffer) => Promise<string>>
@@ -11,7 +12,7 @@ const readFileMap: Partial<
   txt: readTxt,
   pdf: readPdf,
   docx: readDocx,
-  // 添加其他文件类型的处理函数
+  pptx: readPptx,
 };
 
 export async function readFile(file: FileLoaded): Promise<FileRead> {

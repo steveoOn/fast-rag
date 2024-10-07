@@ -2,7 +2,6 @@ import { DocXML } from '@/types';
 
 export function extractTextFromParsedXml(parsedXml: DocXML): string {
   // 这个函数需要根据实际的XML结构来实现
-  // 这里只是一个简化的示例
   let text = '';
   if (parsedXml['w:document'] && parsedXml['w:document']['w:body']) {
     const paragraphs = parsedXml['w:document']['w:body']['w:p'];
