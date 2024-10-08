@@ -29,7 +29,6 @@ export default async function VersionsPage(props: { params: { documentId: string
   }
 
   const docVersions = await getVersions({ documentId, apiKey });
-  console.log(docVersions);
 
   return (
     <TranslationWrapper namespace="Platform.VersionsManagement">

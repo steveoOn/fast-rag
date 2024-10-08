@@ -82,7 +82,6 @@ export async function POST(request: Request) {
     return NextResponse.json(body, { status: 201 });
   } catch (error) {
     const { message, code, details } = handleError(error);
-    console.log(message, code, details);
     const status =
       code === 'VALIDATION_ERROR'
         ? 400

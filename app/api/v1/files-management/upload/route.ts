@@ -15,8 +15,12 @@ export async function POST(request: Request) {
     const apiKey = extractApiKey(request);
 
     const formData = await request.formData();
-    const keys = [...formData.keys()];
-    const files = keys.map((key) => formData.get(key) as File);
+    const keys = [...formData.keys()].filter((item) => item.includes('file'));
+    const docNames = JSON.parse(formData.get('docNames') as string);
+    const files = keys.map((key) => ({
+      file: formData.get(key) as File,
+      docName: docNames[key],
+    }));
 
     if (!files.length) {
       throw new CustomError('未提供文件', 'MISSING_FILE');
@@ -27,6 +31,7 @@ export async function POST(request: Request) {
         const uploadFiles = res
           .filter((item) => item.success && item.file)
           .map((item) => item.file);
+
         await addDoc(uploadFiles as FileUploadRes[], apiKey);
         await writer.write(
           encoder.encode(`data: ${JSON.stringify({ completed: true, files: uploadFiles })}\n\n`)

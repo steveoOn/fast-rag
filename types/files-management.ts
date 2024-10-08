@@ -88,10 +88,13 @@ export const FilesManagementStoreSchema = z.object({
   getTableData: z.function(),
   /**
    * 上传新文档
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 文件上传事件
+   * @param {ExtendedFile[]} event - 文件上传事件
    * @returns {void}
    */
-  uploadFiles: z.function().args(z.custom<React.ChangeEvent<HTMLInputElement>>()).returns(z.void()),
+  uploadFiles: z
+    .function()
+    .args(z.custom<{ files: File[]; docNames: string[] }>())
+    .returns(z.void()),
   /**
    * 文档（最新版本）批量向量化
    * @returns {void}

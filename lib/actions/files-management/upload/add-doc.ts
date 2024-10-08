@@ -13,7 +13,7 @@ export async function addDoc(files: FileUploadRes[], apiKey: string) {
 
     const documentsToInsert = files.map((file) => ({
       client_id: client.id,
-      name: file.name,
+      name: file.docName,
       storage_url: file.uploadURL,
       type: file.type,
     }));

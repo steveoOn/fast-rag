@@ -4,7 +4,7 @@ import { FilesManagementStore, TableData } from '@/types';
 import { Table, Row } from '@tanstack/react-table';
 import { toast } from '@/hooks/use-toast';
 import { t } from '@/lib/utils';
-import { FileUploadRes } from '@/types/file';
+import { FileUploadRes } from '@/types';
 
 const getSelectedFiles = (table: Table<TableData>) => {
   return table.getSelectedRowModel().rows.map((row: Row<TableData>) => ({
@@ -119,14 +119,24 @@ const useFilesManagementStore = create<FilesManagementStore>((set, get) => ({
       }
     });
   },
-  uploadFiles: async (e) => {
+  uploadFiles: async (args: { files: File[]; docNames: string[] }) => {
+    const { files, docNames } = args;
     const { getTableData, updateUploadingProgress } = get();
-    const files = e.target?.files;
+
     if (files) {
       const formData = new FormData();
-      Array.from(files).forEach((file, index) => {
+      files.forEach((file, index) => {
         formData.append(`file-${index}`, file);
       });
+      const docNameObj: { [x: string]: string } = docNames.reduce(
+        (res, cur, index) => {
+          res[`file-${index}`] = cur;
+          return res;
+        },
+        {} as { [x: string]: string }
+      );
+
+      formData.append('docNames', JSON.stringify(docNameObj));
 
       api.sse({
         url: '/files-management/upload',

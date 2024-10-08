@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       throw new CustomError('未提供文档ID', 'MISSING_DOCUMENT_ID');
     }
 
-    upload({ files: [file], apiKey, sendProgress })
+    upload({ files: [{ file: file }], apiKey, sendProgress })
       .then(async (res) => {
         const uploadFiles = res
           .filter((item) => item.success && item.file)

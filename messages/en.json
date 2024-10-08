@@ -156,7 +156,10 @@
         "batchEmbedding": "Batch Parse Documents",
         "uploadNewVersion": "Upload New Version",
         "embeddingCurrentDoc": "Parse Current Version",
-        "viewVersions": "View Version History"
+        "viewVersions": "View Version History",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "selectFiles": "Select Files"
       },
       "Messages": {
         "selectFiles": "Please select files"

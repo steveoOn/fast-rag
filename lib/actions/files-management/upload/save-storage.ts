@@ -74,6 +74,7 @@ async function uploadFileToStorage({
           lastModified: file.lastModified,
           extension: file.extension,
           uploadURL: urlData.publicUrl,
+          docName: file.docName,
         });
         cleanup();
       },
@@ -89,14 +90,15 @@ async function uploadFileToStorage({
 }
 
 export async function upload(args: {
-  files: File[];
+  files: { file: File; docName?: string }[];
   apiKey: string;
   sendProgress: (percent: string, fileName: string) => void;
 }) {
   const { files, apiKey, sendProgress } = args;
   const allPromise = [];
 
-  for await (const file of files) {
+  for await (const item of files) {
+    const { file, docName } = item;
     const validatedData = uploadFileSchema.parse({
       file,
       // metadata: parsedMetadata,
@@ -111,6 +113,7 @@ export async function upload(args: {
       lastModified: file.lastModified,
       extension: file.name.split('.').pop() || '',
       buffer,
+      docName: docName || '',
       // metadata: validatedData.metadata,
     };
 

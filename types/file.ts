@@ -18,6 +18,7 @@ export type FileMetadata = z.infer<typeof FileSchema>;
 // 修改 UploadFile 类型定义
 export type UploadFile = Omit<FileMetadata, 'uploadURL' | 'id'> & {
   buffer: Buffer;
+  docName: string;
 };
 
 export const FileUploadResSchema = z.object({
@@ -27,6 +28,7 @@ export const FileUploadResSchema = z.object({
   uploadURL: z.string().url().optional(), // 文件在存储中的 URL（可选，因为上传前可能没有）
   lastModified: z.number(), // 最后修改时间戳
   extension: z.string(), // 文件扩展名
+  docName: z.string(),
 });
 
 // 文件下载
