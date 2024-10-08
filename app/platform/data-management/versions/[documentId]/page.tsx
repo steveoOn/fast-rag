@@ -35,24 +35,30 @@ export default async function VersionsPage(props: { params: { documentId: string
       {(t) => (
         <div>
           <BackButton href="/platform/data-management" size="default" label={t('backToFiles')} />
+          <div className="mb-12">
+            <h1 className="text-4xl font-bold text-blue-900 mb-4 dark:text-blue-300">
+              {t('title')}
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400">{t('subtitle')}</p>
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>{t('Column.name')}</TableHead>
                 <TableHead>{t('Column.version')}</TableHead>
                 <TableHead>{t('Column.createdAt')}</TableHead>
-                <TableHead>{t('Column.preview')}</TableHead>
+                {/* <TableHead>{t('Column.preview')}</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
               {docVersions.map((item) => {
-                const { id, version, created_at } = item;
+                const { id, version, created_at, name } = item;
                 return (
                   <TableRow key={id}>
-                    <TableCell>这是文件名</TableCell>
+                    <TableCell>{name}</TableCell>
                     <TableCell>{version}</TableCell>
                     <TableCell>{created_at}</TableCell>
-                    <TableCell>这是一个按钮</TableCell>
+                    {/* <TableCell>这是一个按钮</TableCell> */}
                   </TableRow>
                 );
               })}

@@ -145,6 +145,8 @@
       }
     },
     "FilesManagement": {
+      "title": "データ管理",
+      "subtitle": "文書をアップロードして管理します。",
       "Column": {
         "fileName": "ファイル名",
         "fileVersion": "バージョン",
@@ -167,6 +169,7 @@
     },
     "VersionsManagement": {
       "title": "バージョン管理",
+      "subtitle": "文書の履歴バージョン",
       "Column": {
         "name": "ファイル名",
         "version": "バージョン",

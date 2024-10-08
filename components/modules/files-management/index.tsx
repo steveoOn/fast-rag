@@ -20,13 +20,13 @@ export default function FilesManagement() {
 
   return (
     <div>
-      <div className="flex gap-4 px-4">
+      <div className="flex gap-4">
         <AddNewDoc />
         <Delete />
         <Embedding />
       </div>
       <UploadProgress />
-      <div className="p-4">
+      <div className="pt-6">
         <FilesTable />
       </div>
       {isLoading ? (
