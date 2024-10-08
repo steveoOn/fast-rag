@@ -145,6 +145,8 @@
       }
     },
     "FilesManagement": {
+      "title": "数据管理",
+      "subtitle": "上传、管理文档。",
       "Column": {
         "fileName": "文件名",
         "fileVersion": "版本",
@@ -170,6 +172,7 @@
     },
     "VersionsManagement": {
       "title": "版本管理",
+      "subtitle": "文档的历史版本",
       "Column": {
         "name": "文件名",
         "version": "版本",

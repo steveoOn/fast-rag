@@ -145,6 +145,8 @@
       }
     },
     "FilesManagement": {
+      "title": "Data Management",
+      "subtitle": "Upload and manage documents.",
       "Column": {
         "fileName": "File Name",
         "fileVersion": "Version",
@@ -167,6 +169,7 @@
     },
     "VersionsManagement": {
       "title": "Version Management",
+      "subtitle": "Historical Versions of Documents",
       "Column": {
         "name": "File Name",
         "version": "Version",

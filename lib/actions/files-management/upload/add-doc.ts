@@ -24,6 +24,7 @@ export async function addDoc(files: FileUploadRes[], apiKey: string) {
       document_id: doc.id,
       version: 1,
       storage_url: doc.storage_url,
+      name: files.filter((item) => item.uploadURL === doc.storage_url)[0].name,
     }));
 
     const documentVersion = await tx.insert(document_versions).values(docVersionInsert).returning();

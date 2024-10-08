@@ -32,6 +32,7 @@ export async function addVersion(args: {
     document_id: documentId,
     storage_url: file.uploadURL,
     version,
+    name: file.name,
   };
 
   const insertVersion = db.insert(document_versions).values(insertVersionData);
