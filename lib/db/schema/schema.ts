@@ -83,6 +83,7 @@ export const document_versions = pgTable('document_versions', {
     .notNull()
     .references(() => documents.id, { onDelete: 'cascade' }),
   version: integer('version').notNull(),
+  name: varchar('name', { length: 255 }), // 移 .notNull()
   storage_url: varchar('storage_url', { length: 1024 }),
   created_at: timestamp('created_at', { mode: 'string' }).defaultNow().notNull(),
 });
@@ -130,7 +131,9 @@ export const documentsSelectSchema = createSelectSchema(documents);
 export type Document = z.infer<typeof documentsSelectSchema>;
 export type DocumentInsert = z.infer<typeof documentsSchema>;
 
-export const document_versionsSchema = createInsertSchema(document_versions);
+export const document_versionsSchema = createInsertSchema(document_versions).extend({
+  name: z.string().optional(),
+});
 export const document_versionsSelectSchema = createSelectSchema(document_versions);
 export type DocumentVersion = z.infer<typeof document_versionsSelectSchema>;
 export type DocumentVersionInsert = z.infer<typeof document_versionsSchema>;
