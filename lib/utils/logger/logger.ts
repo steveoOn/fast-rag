@@ -1,4 +1,4 @@
-import pino from 'pino';
+import { getLogger } from './logger-instance';
 import { Logger } from 'pino';
 
 let logger: Logger;
@@ -13,7 +13,7 @@ if (process.env.VERCEL) {
     sourceToken: process.env.LOGFLARE_SOURCE_TOKEN,
   });
 
-  logger = pino(
+  logger = getLogger().child(
     {
       browser: {
         transmit: {
@@ -21,7 +21,6 @@ if (process.env.VERCEL) {
           send: send,
         },
       },
-      level: 'info',
       base: {
         env: process.env.VERCEL_ENV,
         revision: process.env.VERCEL_GITHUB_COMMIT_SHA,
@@ -31,28 +30,14 @@ if (process.env.VERCEL) {
   );
 } else if (process.env.NODE_ENV === 'production') {
   // Docker生产环境配置
-  logger = pino({
-    level: 'info',
+  logger = getLogger().child({
     base: {
       env: process.env.NODE_ENV,
     },
   });
 } else {
   // 本地开发环境配置
-  logger = pino({
-    level: 'debug',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'SYS:standard',
-        ignore: 'pid,hostname',
-      },
-    },
-    base: {
-      env: process.env.NODE_ENV,
-    },
-  });
+  logger = getLogger();
 }
 
 export { logger };
